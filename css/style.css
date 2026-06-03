@@ -1,0 +1,362 @@
+/* ------------------------------------------------------------------
+   Academic site
+     · Typography  — Fjalla One + Libre Franklin  (christiankwolf.com)
+     · Hero photo  — large rectangular portrait    (joelflynn.com)
+     · Paper icons — small journal thumbnails       (brunopellegrino.com)
+
+   ALMOST EVERYTHING you'd want to tweak is in the :root block below.
+   Change a number, save, refresh. No need to hunt through the file.
+   ------------------------------------------------------------------ */
+
+:root {
+  /* ---- Fonts (loaded from Google Fonts in each .html <head>) ---- */
+  --font-head: "Fjalla One", "Libre Franklin", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-body: "Libre Franklin", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  /* ---- Colors ---- */
+  --text: #1a1a1a;
+  --muted: #555;
+  --link: #1a5fb4;          /* accent / link color — change to re-theme */
+  --link-hover: #0b3d91;
+  --border: #e4e4e4;
+  --bg: #ffffff;
+  --badge-bg: #f4f4f4;
+
+  /* ---- Layout ---- */
+  --max-width: 880px;
+
+  /* ---- Hero photo (joelflynn.com = large rectangle, not a circle) ----
+     --photo-max-width : how wide the photo can get (px)
+     --photo-aspect    : "auto" keeps the photo's real shape.
+                         Set e.g. "3 / 2" for a wide landscape banner
+                         (it will crop to fill — see object-position below).
+     --photo-radius    : corner rounding (0 = sharp corners)              */
+  --photo-max-width: 440px;
+  --photo-aspect: auto;
+  --photo-radius: 8px;
+
+  /* ---- Paper thumbnail / journal icon (brunopellegrino.com) ---- */
+  --thumb-width: 104px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--link); text-decoration: none; }
+a:hover { color: var(--link-hover); text-decoration: underline; }
+
+/* ---------- Layout ---------- */
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+}
+
+/* ---------- Top navigation ---------- */
+
+nav.topnav {
+  border-bottom: 1px solid var(--border);
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+nav.topnav ul {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 14px 24px;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+}
+
+nav.topnav a {
+  color: var(--text);
+  font-family: var(--font-head);
+  text-transform: uppercase;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+nav.topnav a.active,
+nav.topnav a:hover { color: var(--link); text-decoration: none; }
+
+/* ---------- Hero / header ---------- */
+
+header.hero {
+  text-align: center;
+  padding: 40px 0 28px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 36px;
+}
+
+header.hero h1 {
+  font-family: var(--font-head);
+  font-size: 42px;
+  letter-spacing: 0.04em;
+  font-weight: 400;
+  margin: 0 0 8px;
+  text-transform: uppercase;
+}
+
+header.hero .title {
+  font-size: 16px;
+  color: var(--muted);
+  margin: 4px 0 16px;
+}
+
+header.hero .affiliation {
+  font-size: 15px;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+header.hero .contact {
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 14px;
+}
+
+header.hero .contact span { margin: 0 6px; }
+
+header.hero .socials {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+}
+
+header.hero .socials a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px; height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--text);
+}
+header.hero .socials a:hover {
+  border-color: var(--link);
+  color: var(--link);
+}
+
+/* Large rectangular portrait, joelflynn.com style.
+   Shape & size are controlled by --photo-* variables in :root. */
+header.hero .portrait {
+  display: block;
+  width: 100%;
+  max-width: var(--photo-max-width);
+  aspect-ratio: var(--photo-aspect);
+  object-fit: cover;
+  object-position: center 30%;   /* keeps faces in frame if the photo is cropped */
+  margin: 0 auto 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--photo-radius);
+}
+
+/* ---------- Section headings ---------- */
+
+h2.section {
+  font-family: var(--font-head);
+  font-size: 22px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-weight: 400;
+  margin: 44px 0 18px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--text);
+}
+
+h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 6px;
+}
+
+/* ---------- Paper entries ---------- */
+
+.paper {
+  display: grid;
+  grid-template-columns: var(--thumb-width) 1fr;
+  gap: 22px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.paper:last-child { border-bottom: none; }
+
+/* Small "journal icon" thumbnail next to each paper (brunopellegrino.com).
+   Drop a small image into images/ and set "thumb" on the paper in
+   content.json. With no thumb, a tidy placeholder is shown instead. */
+.paper .thumb {
+  width: var(--thumb-width);
+}
+
+.paper .thumb img {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  display: block;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.paper .thumb a:hover img {
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.14);
+  transform: translateY(-1px);
+}
+
+.paper .thumb.placeholder {
+  width: var(--thumb-width);
+  aspect-ratio: 8.5 / 11;
+  background: #fafafa;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10.5px;
+  color: #b0b0b0;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.paper .title {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.paper .authors {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 4px 0;
+}
+
+.paper .venue {
+  font-size: 14px;
+  font-style: italic;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.paper .abstract {
+  font-size: 14.5px;
+  margin: 10px 0;
+}
+
+.paper .links {
+  font-size: 13.5px;
+  margin-top: 8px;
+}
+
+.paper .links a { margin-right: 12px; }
+
+.paper .badges {
+  margin: 8px 0 4px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.paper .badge {
+  font-size: 11.5px;
+  background: var(--badge-bg);
+  border: 1px solid var(--border);
+  padding: 3px 8px;
+  border-radius: 3px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Awards: longer "Prize Name — description, year" honors, rendered
+   as inline star+text rows that wrap gracefully. Distinct from the
+   short pill `.badge` style above. */
+.paper .awards {
+  margin: 10px 0 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.paper .award {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.paper .award-icon {
+  color: #b8902a;
+  flex-shrink: 0;
+  display: inline-flex;
+  transform: translateY(1px);
+}
+
+.paper .award-title {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.paper .award-desc {
+  color: var(--muted);
+}
+
+.paper .presentations {
+  font-size: 12.5px;
+  color: var(--muted);
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+.paper .presentations b { color: var(--text); font-weight: 600; }
+
+/* ---------- Teaching list ---------- */
+
+.teaching-item {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.teaching-item:last-child { border-bottom: none; }
+.teaching-item .course-title { font-weight: 600; font-size: 15.5px; }
+.teaching-item .course-meta { font-size: 14px; color: var(--muted); }
+.teaching-item .course-desc { font-size: 14px; margin-top: 4px; }
+
+/* ---------- Footer ---------- */
+
+footer {
+  text-align: center;
+  padding: 30px 0 20px;
+  font-size: 12.5px;
+  color: #888;
+  border-top: 1px solid var(--border);
+  margin-top: 48px;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 640px) {
+  :root { --thumb-width: 76px; }
+  .paper { grid-template-columns: var(--thumb-width) 1fr; gap: 14px; }
+  header.hero h1 { font-size: 30px; }
+  header.hero .portrait { max-width: 280px; }
+  nav.topnav ul { gap: 14px; font-size: 13px; padding: 12px 16px; }
+  .container { padding: 24px 16px 60px; }
+}

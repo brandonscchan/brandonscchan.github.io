@@ -1,0 +1,124 @@
+{
+  "profile": {
+    "name": "Brandon Chan",
+    "title": "Pre-Doctoral Fellow",
+    "affiliation": "Department of Economics, Yale University",
+    "location": "New Haven, CT",
+    "email": "brandon.chan@yale.edu",
+    "portrait": "images/portrait.jpg",
+    "cv": "files/cv.pdf",
+    "bio": [
+      "I am a pre-doctoral fellow in economics at Yale University. My research interests are in <b>spatial economics</b>, <b>macroeconomics</b>, and <b>industrial organization</b>. I study how heterogeneous firms shape aggregate outcomes through investment, pricing, and entry decisions.",
+      "I graduated with a B.A. in Economics and Mathematics in May 2026, also from Yale. You can find my CV <a href=\"files/cv.pdf\">here</a>."
+    ],
+    "socials": [
+      { "type": "email",    "url": "mailto:brandon.chan@yale.edu" },
+      { "type": "scholar",  "url": "https://scholar.google.com/" },
+      { "type": "x",        "url": "https://x.com/" },
+      { "type": "linkedin", "url": "https://www.linkedin.com/" },
+      { "type": "github",   "url": "https://github.com/" }
+    ],
+    "footer": "© 2026 Brandon Chan. Last updated May 2026."
+  },
+
+  "working_papers": [
+    {
+      "title": "Corrective Overoptimism",
+      "url": "#",
+      "thumb": "",
+      "authors": "Brandon S.C. Chan",
+      "venue": "",
+      "badges": [
+        "Wrexham/Heinz Prize, Best Thesis Across the Social Sciences, Yale University, 2026",
+        "Dickerman Prize, Best Thesis in Economics, Yale University, 2026",
+        "Best Paper, 25th Carroll Round, Georgetown University, 2026"],
+      "abstract": "Booms in infrastructure investment — railways in the 1840s, electricity in the 1920s, fibre in the 1990s — often coincide with investor exuberance and losses. But the infrastructure remains long after these episodes. I show that overoptimistic investors can correct a general class of market failure: agents with diagnostic expectations over-extrapolate good news and conduct irreversible investments, pushing what was once a market failure toward the efficient level. This mechanism — <i>corrective overoptimism</i> — is embedded in a model of spatial development with endogenous infrastructure and estimated on data from England and Wales, 1700–1881, spanning the canal and railway booms. Corrective overoptimism can be a potent channel of growth.",
+      "links": [
+        { "label": "PDF",    "url": "#" },
+        { "label": "Slides", "url": "#" }
+      ],
+      "presentations": ""
+    },
+    {
+      "title": "Title of Your First Working Paper",
+      "url": "files/paper1.pdf",
+      "thumb": "",
+      "authors": "with Coauthor One and Coauthor Two",
+      "venue": "Revise & Resubmit, <i>Journal Name</i>",
+      "badges": ["NBER WP #00000", "Best Paper Prize"],
+      "abstract": "Write a 150–250 word abstract here. Describe the research question, the data and methodology, and the main findings. Keep it at the same level of formality you would use in a journal submission. Replace this text with your own.",
+      "links": [
+        { "label": "PDF",             "url": "files/paper1.pdf" },
+        { "label": "Online Appendix", "url": "files/paper1_appendix.pdf" },
+        { "label": "Replication",     "url": "#" },
+        { "label": "Slides",          "url": "#" },
+        { "label": "SSRN",            "url": "#" }
+      ],
+      "presentations": "NBER Summer Institute (2025), AEA Annual Meetings (2025), Yale Macro Lunch, SED, Minneapolis Fed."
+    }
+  ],
+
+  "published_papers": [
+    {
+      "title": "Title of Published Paper",
+      "url": "#",
+      "thumb": "",
+      "authors": "with Coauthor Name",
+      "venue": "<i>American Economic Review</i>, 2024, 114(6): 1500–1550.",
+      "badges": ["Best Paper Award"],
+      "abstract": "Abstract of the published paper. Replace with your own text.",
+      "links": [
+        { "label": "Published Version", "url": "#" },
+        { "label": "Working Paper",     "url": "#" },
+        { "label": "Appendix",          "url": "#" },
+        { "label": "Replication",       "url": "#" }
+      ],
+      "presentations": ""
+    }
+  ],
+
+  "work_in_progress": [
+    {
+      "title": "Title of In-Progress Project",
+      "authors": "with Coauthor Name",
+      "abstract": "Short description of what this project is about. 1–3 sentences."
+    }
+  ],
+
+  "teaching": {
+    "instructor": [
+      {
+        "course_title": "ECON 121 — Intermediate Microeconomics",
+        "meta": "Yale University · Spring 2026",
+        "description": "Undergraduate course covering consumer theory, producer theory, market structures, and welfare. <a href=\"files/syllabus.pdf\">Syllabus</a>."
+      }
+    ],
+    "ta": [
+      {
+        "course_title": "ECON 3385 — Advanced Macroeconomics",
+        "meta": "Yale University · Spring 2026 · Prof. Instructor Name",
+        "description": "Ph.D.-level course on dynamic stochastic general equilibrium models, heterogeneous-agent macro, and numerical methods."
+      },
+      {
+        "course_title": "ECON 3351 — Econometrics I",
+        "meta": "Yale University · Spring 2026 · Prof. Instructor Name",
+        "description": "First-year Ph.D. econometrics. Recitation notes available on request."
+      }
+    ],
+    "materials": [
+      {
+        "course_title": "Lecture notes on computational methods",
+        "meta": "",
+        "description": "<a href=\"#\">Notes on value function iteration and endogenous grid methods</a>, with accompanying Julia code."
+      }
+    ]
+  },
+
+  "data": [
+    {
+      "course_title": "Dataset Name",
+      "meta": "",
+      "description": "Description of the dataset: what it contains, unit of observation, time range, and citation to cite when using it. <a href=\"#\">[Download]</a> · <a href=\"#\">[Documentation]</a> · <a href=\"#\">[Replication code]</a>."
+    }
+  ]
+}
