@@ -1,6 +1,10 @@
-Place your CV (cv.pdf), paper PDFs, slides, and appendices in this folder.
-Filenames referenced from index.html / teaching.html:
+Put your documents here: CV, paper PDFs, slides, online appendices, syllabi.
+
+You don't edit any HTML. Reference a file from content.json, e.g.:
+  "url":  "files/your_paper.pdf"
+  "cv":   "files/cv.pdf"          (profile.cv -> the CV link in the nav)
+
+Current file:
   - cv.pdf
-  - paper1.pdf
-  - paper1_appendix.pdf
-  - syllabus.pdf
+
+See ../README.md for the full editing guide.

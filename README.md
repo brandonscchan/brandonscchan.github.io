@@ -39,6 +39,7 @@ website/
 ├── index.html         Research / home page (template shell — rarely touched)
 ├── teaching.html      Teaching page (template shell)
 ├── data.html          Data page (template shell)
+├── favourites.html    Favourites page — papers & quotes by category
 ├── css/style.css      Styling. All the easy knobs are in the :root block at the top.
 ├── js/site.js         Renders content.json into the pages (rarely touched)
 ├── images/            Portrait + paper thumbnails (journal icons)
@@ -65,6 +66,11 @@ Top-level keys:
 | `work_in_progress`  | Shorter in-progress entries (home page)            |
 | `teaching`          | `instructor`, `ta`, `materials` lists              |
 | `data`              | Public datasets                                    |
+| `favourites`        | Favourite papers & quotes, grouped by category     |
+
+> Your **profile photo, name, and contact details appear only on the
+> front page**. The Teaching, Data, and Favourites pages show just a
+> heading so the focus stays on their content.
 
 ### Add a working paper
 
@@ -104,6 +110,43 @@ Edit `profile` at the top of `content.json`.
 - `socials`: supported `type` values are `email`, `scholar`, `x`,
   `linkedin`, `github`, `website`. Remove the ones you don't use and fill
   in real URLs for the rest.
+
+### Favourite papers & quotes (the Favourites page)
+
+`favourites` has an `intro` line and a list of `categories`. Each category
+has a `name` and any mix of `papers` and `quotes`:
+
+```json
+"favourites": {
+  "intro": "A running list of papers and passages I keep returning to.",
+  "categories": [
+    {
+      "name": "Spatial Economics",
+      "papers": [
+        {
+          "citation": "Krugman, P. (1991), \"Increasing Returns and Economic Geography,\" <i>JPE</i>.",
+          "url": "https://www.jstor.org/stable/2937739",
+          "note": "Why this one stuck with me — one sentence (optional)."
+        }
+      ],
+      "quotes": [
+        {
+          "text": "A short passage worth rereading.",
+          "source": "Author, <i>Title</i> (Year)"
+        }
+      ]
+    }
+  ]
+}
+```
+
+- A paper with a `url` becomes a clickable link; leave `url` as `""` for
+  plain text. `note` is optional.
+- A category can have only papers, only quotes, or both.
+- **Add a category** by appending another `{ "name": ..., "papers": [...],
+  "quotes": [...] }` object. Reorder the array to reorder the page.
+- `citation`, `note`, `text`, and `source` all accept inline HTML
+  (`<i>`, `<b>`, `<a>`).
 
 ### JSON safety tip
 
@@ -248,6 +291,15 @@ Refresh **https://brandonscchan.github.io** about 30–60 seconds later.
   fonts entirely, change these and update the Google Fonts `<link>` in the
   `<head>` of each `.html` file.
 - **Thumbnail size** — `--thumb-width`.
+- **Browser-tab icon (favicon)** — it's the Yale "Y" at
+  `images/favicon.png` (with `images/apple-touch-icon.png` for phones). To
+  change it, replace those two square PNGs. To make a square icon from any
+  image on macOS:
+  ```bash
+  sips -c 394 394 images/source.png --out /tmp/sq.png          # center-crop square
+  sips -Z 256 /tmp/sq.png --out images/favicon.png             # 256×256 tab icon
+  sips -Z 180 /tmp/sq.png --out images/apple-touch-icon.png    # 180×180 phone icon
+  ```
 - **Remove the Data tab** — delete `data.html`, remove the `'data'` entry
   in the `items` array inside `js/site.js`, and delete the `"data"` key
   from `content.json`.

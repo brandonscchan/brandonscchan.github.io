@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generate Password Hash</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 500px; margin: 80px auto; padding: 0 2rem; }
+    h1 { font-size: 1.4rem; margin-bottom: 0.5rem; }
+    p { color: #555; font-size: 0.9rem; margin-bottom: 2rem; line-height: 1.6; }
+    code { background: #f4f4f4; padding: 1px 5px; border-radius: 3px; font-size: 0.85em; }
+    input { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; margin-bottom: 1rem; box-sizing: border-box; }
+    button { padding: 0.75rem 2rem; background: #1a5fb4; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem; }
+    button:hover { background: #0b3d91; }
+    .result { margin-top: 1.5rem; padding: 1rem; background: #f5f5f5; border-radius: 6px; display: none; }
+    .label { font-size: 0.75rem; color: #999; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.1em; }
+    .hash { word-break: break-all; font-family: monospace; font-size: 0.85rem; }
+    .copy-btn { margin-top: 0.75rem; padding: 0.4rem 1rem; font-size: 0.8rem; }
+  </style>
+</head>
+<body>
+  <h1>Password Hash Generator</h1>
+  <p>
+    Type your desired password below to generate its SHA-256 hash.
+    Copy the hash and paste it into <code>GATE_HASH</code> in <code>js/site.js</code>, then redeploy the site.
+  </p>
+  <input type="password" id="pw" placeholder="Enter your password" />
+  <button onclick="generate()">Generate Hash</button>
+  <div class="result" id="result">
+    <div class="label">SHA-256 Hash — paste into GATE_HASH in js/site.js</div>
+    <div class="hash" id="hash-output"></div>
+    <button class="copy-btn" onclick="copyHash()">Copy</button>
+  </div>
+  <script>
+    async function generate() {
+      const pw = document.getElementById('pw').value;
+      if (!pw) { alert('Please enter a password.'); return; }
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
+      const hash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+      document.getElementById('hash-output').textContent = hash;
+      document.getElementById('result').style.display = 'block';
+    }
+    function copyHash() {
+      navigator.clipboard.writeText(document.getElementById('hash-output').textContent)
+        .then(() => { document.querySelector('.copy-btn').textContent = 'Copied!'; setTimeout(() => { document.querySelector('.copy-btn').textContent = 'Copy'; }, 2000); });
+    }
+    document.getElementById('pw').addEventListener('keydown', e => { if (e.key === 'Enter') generate(); });
+  </script>
+</body>
+</html>

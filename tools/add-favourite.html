@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="theme-color" content="#0f1923" />
+  <meta name="robots" content="noindex" />
+  <title>Add Favourite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Libre+Franklin:wght@400;600&display=swap" />
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0;
+      background: #0f1923; color: #e8e8e8;
+      font-family: 'Libre Franklin', -apple-system, sans-serif;
+      font-size: 16px; min-height: 100vh;
+    }
+    .page { max-width: 480px; margin: 0 auto; padding: 2.5rem 1.25rem 5rem; }
+
+    h1 {
+      font-family: 'Fjalla One', sans-serif;
+      font-size: 1.5rem; font-weight: 400;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: #fff; margin: 0;
+    }
+    .accent-line { width: 24px; height: 1px; background: #1a5fb4; margin: 1.1rem 0 1.75rem; }
+
+    label {
+      display: block; font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.4); margin-bottom: 0.4rem; margin-top: 1.25rem;
+    }
+    input, select, textarea {
+      display: block; width: 100%;
+      padding: 0.8rem 0.9rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 4px; color: #fff;
+      font-size: 1rem; font-family: inherit;
+      -webkit-appearance: none; outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus, select:focus, textarea:focus { border-color: rgba(26,95,180,0.6); }
+    input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.2); }
+    select option { background: #0f1923; }
+    textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
+
+    /* Type toggle */
+    .type-toggle {
+      display: flex; gap: 0; margin-top: 0.5rem;
+      border: 1px solid rgba(255,255,255,0.12); border-radius: 4px; overflow: hidden;
+    }
+    .type-btn {
+      flex: 1; padding: 0.7rem; background: none; border: none;
+      color: rgba(255,255,255,0.4); font-size: 0.8rem; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      cursor: pointer; font-family: inherit; transition: all 0.18s;
+    }
+    .type-btn.active { background: rgba(26,95,180,0.25); color: #6fa8e8; }
+    .type-btn:not(:last-child) { border-right: 1px solid rgba(255,255,255,0.12); }
+
+    .btn {
+      display: block; width: 100%; margin-top: 2rem; padding: 0.9rem;
+      background: #1a5fb4; color: #fff; border: none; border-radius: 4px;
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.16em;
+      text-transform: uppercase; cursor: pointer; font-family: inherit;
+      transition: background 0.2s;
+    }
+    .btn:hover, .btn:active { background: #0b3d91; }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .btn-secondary {
+      display: block; width: 100%; margin-top: 0.75rem; padding: 0.9rem;
+      background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.5);
+      border: 1px solid rgba(255,255,255,0.12); border-radius: 4px;
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; cursor: pointer; font-family: inherit;
+      transition: all 0.18s;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); }
+
+    .msg {
+      margin-top: 1rem; padding: 0.8rem 1rem;
+      border-radius: 4px; font-size: 0.85rem; display: none;
+    }
+    .msg.success { background: rgba(52,199,89,0.1); border: 1px solid rgba(52,199,89,0.3); color: #4ade80; }
+    .msg.error   { background: rgba(255,80,80,0.08); border: 1px solid rgba(255,80,80,0.25); color: #fca5a5; }
+
+    .help { font-size: 0.78rem; color: rgba(255,255,255,0.25); margin-top: 0.4rem; }
+    .settings-link { margin-top: 2.5rem; font-size: 0.75rem; color: rgba(255,255,255,0.2); text-align: center; cursor: pointer; }
+    .settings-link:hover { color: rgba(255,255,255,0.45); }
+
+    /* Fields shown per type */
+    .paper-fields, .quote-fields { }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── Setup screen ─────────────────────────────────── -->
+  <div id="setup-screen">
+    <h1>Setup</h1>
+    <div class="accent-line"></div>
+    <p style="font-size:0.85rem;color:rgba(255,255,255,0.4);line-height:1.6;margin-bottom:1.5rem">
+      Connect to GitHub so this tool can update <code style="font-size:0.8em;background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:3px">content.json</code>.
+      Your token is stored locally on this device only.
+    </p>
+
+    <label>GitHub Personal Access Token</label>
+    <input type="password" id="cfg-token" placeholder="ghp_..." autocomplete="off" />
+    <div class="help">Needs repo write access. Generate at github.com → Settings → Developer settings → PAT.</div>
+
+    <label>Repository Owner</label>
+    <input type="text" id="cfg-owner" placeholder="brandonscchan" />
+
+    <label>Repository Name</label>
+    <input type="text" id="cfg-repo" placeholder="e.g. career-website" />
+
+    <label>Path to content.json in repo</label>
+    <input type="text" id="cfg-path" placeholder="content.json" />
+
+    <button class="btn" onclick="saveSetup()">Save &amp; Continue</button>
+    <div class="msg" id="setup-msg"></div>
+  </div>
+
+  <!-- ── Main screen ─────────────────────────────────── -->
+  <div id="main-screen" class="hidden">
+    <h1>Add Favourite</h1>
+    <div class="accent-line"></div>
+
+    <label>Type</label>
+    <div class="type-toggle">
+      <button class="type-btn active" id="btn-paper" onclick="setType('paper')">Paper</button>
+      <button class="type-btn"        id="btn-quote" onclick="setType('quote')">Quote</button>
+    </div>
+
+    <label>Category</label>
+    <input type="text" id="f-category" placeholder="e.g. Spatial Economics" />
+
+    <!-- Paper fields -->
+    <div class="paper-fields" id="paper-fields">
+      <label>Citation</label>
+      <input type="text" id="f-citation" placeholder="Author (Year), &quot;Title,&quot; Journal." />
+
+      <label>URL <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+      <input type="url" id="f-url" placeholder="https://..." />
+
+      <label>Note <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+      <textarea id="f-note" placeholder="Why this paper stuck with you…"></textarea>
+    </div>
+
+    <!-- Quote fields -->
+    <div class="quote-fields hidden" id="quote-fields">
+      <label>Quote text</label>
+      <textarea id="f-quote-text" placeholder="The passage…"></textarea>
+
+      <label>Source <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+      <input type="text" id="f-source" placeholder="Author, Title (Year)" />
+    </div>
+
+    <button class="btn" id="submit-btn" onclick="submitEntry()">Add to Favourites</button>
+    <div class="msg" id="main-msg"></div>
+    <div class="settings-link" onclick="showSetup()">⚙ Settings</div>
+  </div>
+
+</div>
+<script>
+  const CFG_KEY  = 'bc_fav_cfg';
+  let entryType  = 'paper';
+
+  // ── Config ───────────────────────────────────────────────────────────────────
+  function getCfg() {
+    try { return JSON.parse(localStorage.getItem(CFG_KEY)); } catch { return null; }
+  }
+  function saveCfg(cfg) { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); }
+
+  // ── Screens ──────────────────────────────────────────────────────────────────
+  function show(id) {
+    ['setup-screen', 'main-screen'].forEach(s => {
+      document.getElementById(s).classList.toggle('hidden', s !== id);
+    });
+  }
+
+  function showSetup() {
+    const cfg = getCfg() || {};
+    document.getElementById('cfg-token').value = cfg.token || '';
+    document.getElementById('cfg-owner').value = cfg.owner || '';
+    document.getElementById('cfg-repo').value  = cfg.repo  || '';
+    document.getElementById('cfg-path').value  = cfg.path  || 'content.json';
+    show('setup-screen');
+  }
+
+  function saveSetup() {
+    const token = document.getElementById('cfg-token').value.trim();
+    const owner = document.getElementById('cfg-owner').value.trim();
+    const repo  = document.getElementById('cfg-repo').value.trim();
+    const path  = document.getElementById('cfg-path').value.trim() || 'content.json';
+    if (!token || !owner || !repo) { setMsg('setup-msg', 'Please fill in all required fields.', 'error'); return; }
+    saveCfg({ token, owner, repo, path });
+    show('main-screen');
+  }
+
+  function showMain() { show('main-screen'); }
+
+  // ── Type toggle ──────────────────────────────────────────────────────────────
+  function setType(t) {
+    entryType = t;
+    document.getElementById('btn-paper').classList.toggle('active', t === 'paper');
+    document.getElementById('btn-quote').classList.toggle('active', t === 'quote');
+    document.getElementById('paper-fields').classList.toggle('hidden', t !== 'paper');
+    document.getElementById('quote-fields').classList.toggle('hidden', t !== 'quote');
+  }
+
+  // ── Messages ──────────────────────────────────────────────────────────────────
+  function setMsg(id, text, type) {
+    const el = document.getElementById(id);
+    el.textContent = text;
+    el.className = 'msg' + (type ? ' ' + type : '');
+    el.style.display = text ? 'block' : 'none';
+    if (type === 'success') setTimeout(() => { el.style.display = 'none'; }, 6000);
+  }
+
+  // ── GitHub API ───────────────────────────────────────────────────────────────
+  async function ghRequest(cfg, method, body) {
+    const url = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}`;
+    const res = await fetch(url, {
+      method,
+      headers: {
+        'Authorization': `token ${cfg.token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || `GitHub ${res.status}`);
+    return data;
+  }
+
+  function b64decode(str) {
+    return decodeURIComponent(escape(atob(str.replace(/\n/g, ''))));
+  }
+  function b64encode(str) {
+    return btoa(unescape(encodeURIComponent(str)));
+  }
+
+  // ── Submit ───────────────────────────────────────────────────────────────────
+  async function submitEntry() {
+    const cfg = getCfg();
+    if (!cfg) { showSetup(); return; }
+
+    const category = document.getElementById('f-category').value.trim();
+    if (!category) { setMsg('main-msg', 'Category is required.', 'error'); return; }
+
+    let newItem;
+    if (entryType === 'paper') {
+      const citation = document.getElementById('f-citation').value.trim();
+      if (!citation) { setMsg('main-msg', 'Citation is required for a paper.', 'error'); return; }
+      newItem = {
+        type: 'paper',
+        citation,
+        url:  document.getElementById('f-url').value.trim() || '',
+        note: document.getElementById('f-note').value.trim() || '',
+      };
+    } else {
+      const text = document.getElementById('f-quote-text').value.trim();
+      if (!text) { setMsg('main-msg', 'Quote text is required.', 'error'); return; }
+      newItem = {
+        type:   'quote',
+        text,
+        source: document.getElementById('f-source').value.trim() || '',
+      };
+    }
+
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+    setMsg('main-msg', '', '');
+
+    try {
+      // 1. Fetch content.json
+      const fileData = await ghRequest(cfg, 'GET');
+      const json = JSON.parse(b64decode(fileData.content));
+      const sha  = fileData.sha;
+
+      // 2. Find or create category
+      const favs = json.favourites || (json.favourites = { categories: [] });
+      let cat = (favs.categories || (favs.categories = [])).find(c => c.name === category);
+      if (!cat) {
+        cat = { name: category, papers: [], quotes: [] };
+        favs.categories.push(cat);
+      }
+
+      // 3. Prepend item to the appropriate list
+      if (newItem.type === 'paper') {
+        const entry = { citation: newItem.citation };
+        if (newItem.url)  entry.url  = newItem.url;
+        if (newItem.note) entry.note = newItem.note;
+        (cat.papers || (cat.papers = [])).unshift(entry);
+      } else {
+        const entry = { text: newItem.text };
+        if (newItem.source) entry.source = newItem.source;
+        (cat.quotes || (cat.quotes = [])).unshift(entry);
+      }
+
+      // 4. Commit
+      await ghRequest(cfg, 'PUT', {
+        message: `Add favourite: ${newItem.citation || newItem.text.slice(0, 60)}`,
+        content: b64encode(JSON.stringify(json, null, 2)),
+        sha,
+      });
+
+      setMsg('main-msg', 'Added!', 'success');
+      // Reset
+      document.getElementById('f-citation').value   = '';
+      document.getElementById('f-url').value        = '';
+      document.getElementById('f-note').value       = '';
+      document.getElementById('f-quote-text').value = '';
+      document.getElementById('f-source').value     = '';
+
+    } catch (err) {
+      setMsg('main-msg', 'Error: ' + err.message, 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Add to Favourites';
+    }
+  }
+
+  // ── Init ─────────────────────────────────────────────────────────────────────
+  if (getCfg()) { showMain(); } else { showSetup(); }
+</script>
+</body>
+</html>

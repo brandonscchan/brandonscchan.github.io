@@ -339,6 +339,78 @@ h3 {
 .teaching-item .course-meta { font-size: 14px; color: var(--muted); }
 .teaching-item .course-desc { font-size: 14px; margin-top: 4px; }
 
+/* ---------- Favourites (papers & quotes by category) ---------- */
+
+.fav-intro {
+  color: var(--muted);
+  font-size: 15px;
+  margin: 0 0 8px;
+}
+
+.fav-category {
+  margin: 34px 0 8px;
+}
+
+.fav-cat-name {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text);
+  margin: 0 0 14px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--border);
+}
+
+.fav-papers {
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+}
+
+.fav-paper {
+  padding: 9px 0;
+  border-bottom: 1px dotted var(--border);
+}
+.fav-paper:last-child { border-bottom: none; }
+
+.fav-cite { font-size: 14.5px; }
+
+.fav-note {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+.fav-quotes {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 14px 0 6px;
+}
+
+.fav-quote {
+  margin: 0;
+  border-left: 3px solid var(--border);
+  padding: 2px 0 2px 16px;
+}
+
+.fav-quote blockquote {
+  margin: 0;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--text);
+}
+
+.fav-source {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  font-style: normal;
+  color: var(--muted);
+}
+
 /* ---------- Footer ---------- */
 
 footer {
@@ -360,3 +432,184 @@ footer {
   nav.topnav ul { gap: 14px; font-size: 13px; padding: 12px 16px; }
   .container { padding: 24px 16px 60px; }
 }
+
+/* ---------- Reading progress bar ---------- */
+
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--link);
+  width: 0%;
+  z-index: 200;
+  pointer-events: none;
+  transition: width 0.08s linear;
+}
+
+/* ---------- Scroll-triggered reveals ---------- */
+
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+.fade-in-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- Password gate ---------- */
+
+#pw-gate {
+  position: fixed;
+  inset: 0;
+  background: #0f1923;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.65s ease;
+}
+#pw-gate.out { opacity: 0; pointer-events: none; }
+
+.pw-box {
+  text-align: center;
+  width: 100%;
+  max-width: 320px;
+  padding: 0 1.5rem;
+}
+
+.pw-monogram {
+  font-family: var(--font-head);
+  font-size: 2.4rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+.pw-rule {
+  width: 24px;
+  height: 1px;
+  background: var(--link);
+  margin: 1.2rem auto 1.5rem;
+}
+
+.pw-subtitle {
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+  margin-bottom: 1.75rem;
+}
+
+.pw-input {
+  display: block;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  font-size: 1rem;
+  color: #ffffff;
+  text-align: center;
+  letter-spacing: 0.04em;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: var(--font-body);
+  -webkit-appearance: none;
+}
+.pw-input::placeholder { color: rgba(255, 255, 255, 0.18); }
+.pw-input:focus { border-color: rgba(26, 95, 180, 0.65); }
+.pw-input.shake { animation: pw-shake 0.45s ease; }
+
+@keyframes pw-shake {
+  0%, 100% { transform: translateX(0); }
+  15%       { transform: translateX(-9px); }
+  30%       { transform: translateX(8px); }
+  50%       { transform: translateX(-7px); }
+  70%       { transform: translateX(5px); }
+  85%       { transform: translateX(-3px); }
+}
+
+.pw-btn {
+  display: block;
+  width: 100%;
+  margin-top: 0.85rem;
+  padding: 0.85rem;
+  background: var(--link);
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: var(--font-body);
+}
+.pw-btn:hover { background: var(--link-hover); }
+
+.pw-error {
+  min-height: 1.2em;
+  font-size: 0.75rem;
+  color: #fca5a5;
+  margin-top: 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+.pw-remember {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.24);
+  margin-top: 0.9rem;
+  cursor: pointer;
+  user-select: none;
+}
+.pw-remember input { cursor: pointer; accent-color: var(--link); }
+
+/* ---------- Abstract toggle ---------- */
+
+.abstract-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12.5px;
+  font-family: var(--font-body);
+  color: var(--link);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-top: 8px;
+  letter-spacing: 0.01em;
+  transition: color 0.15s;
+}
+.abstract-toggle:hover { color: var(--link-hover); }
+.abstract-toggle svg { transition: transform 0.28s ease; flex-shrink: 0; }
+.abstract-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+
+.abstract-body {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.38s ease;
+}
+.abstract-body .abstract { margin-top: 10px; }
+
+/* ---------- Nav shadow on scroll ---------- */
+
+nav.topnav { transition: box-shadow 0.25s ease; }
+nav.topnav.scrolled { box-shadow: 0 2px 14px rgba(0, 0, 0, 0.08); }
+
+/* ---------- Portrait fade-in ---------- */
+
+header.hero .portrait {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+header.hero .portrait.loaded { opacity: 1; }

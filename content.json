@@ -15,8 +15,8 @@
       { "type": "email",    "url": "mailto:brandon.chan@yale.edu" },
       { "type": "scholar",  "url": "https://scholar.google.com/" },
       { "type": "x",        "url": "https://x.com/" },
-      { "type": "linkedin", "url": "https://www.linkedin.com/" },
-      { "type": "github",   "url": "https://github.com/" }
+      { "type": "linkedin", "url": "https://www.linkedin.com/in/brandon-sc-chan" },
+      { "type": "github",   "url": "https://github.com/brandonscchan" }
     ],
     "footer": "© 2026 Brandon Chan. Last updated May 2026."
   },
@@ -24,7 +24,7 @@
   "working_papers": [
     {
       "title": "Corrective Overoptimism",
-      "url": "#",
+      "url": "https://drive.google.com/file/d/1WN9ZlMECQUX0bFbhMdSP_QgzlSCmf_OA/view?usp=share_link",
       "thumb": "",
       "authors": "Brandon S.C. Chan",
       "venue": "",
@@ -120,5 +120,48 @@
       "meta": "",
       "description": "Description of the dataset: what it contains, unit of observation, time range, and citation to cite when using it. <a href=\"#\">[Download]</a> · <a href=\"#\">[Documentation]</a> · <a href=\"#\">[Replication code]</a>."
     }
-  ]
+  ],
+
+  "favourites": {
+    "intro": "A running list of papers and passages I keep returning to, grouped by field. Inclusion is idiosyncratic and personal — this is a reading list, not a ranking.",
+    "categories": [
+      {
+        "name": "Spatial Economics",
+        "papers": [
+          {
+            "citation": "Author, A. and B. Author (Year), \"Title of the Paper,\" <i>Journal Name</i>, vol(no): pp.",
+            "url": "https://example.com/paper",
+            "note": "One line on why this paper stuck with me — a method, a result, or a way of thinking."
+          },
+          {
+            "citation": "Author, C. (Year), \"Another Favourite,\" <i>Journal Name</i>.",
+            "url": "",
+            "note": ""
+          }
+        ],
+        "quotes": [
+          {
+            "text": "A short passage worth rereading. Keep it to a sentence or two.",
+            "source": "Author, <i>Title of Work</i> (Year)"
+          }
+        ]
+      },
+      {
+        "name": "Macroeconomics",
+        "papers": [
+          {
+            "citation": "Author, D. (Year), \"A Paper I Admire,\" <i>Journal Name</i>.",
+            "url": "https://example.com",
+            "note": ""
+          }
+        ],
+        "quotes": [
+          {
+            "text": "Another favourite line — on economics, method, or anything else.",
+            "source": "— Some Economist"
+          }
+        ]
+      }
+    ]
+  }
 }

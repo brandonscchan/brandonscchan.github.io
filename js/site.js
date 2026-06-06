@@ -3,6 +3,88 @@
    containers (divs with ids) — this script fills them in.
    ------------------------------------------------------------------ */
 
+// ─── Password gate ───────────────────────────────────────────────────────────
+// Set GATE_HASH to the SHA-256 hex of your password to enable protection.
+// Leave '' to disable (good for local development and initial deploy).
+// To generate a hash: open tools/generate-hash.html, type your password,
+// copy the hex output, paste it here, then redeploy the site.
+const GATE_HASH = 'cd8cd209dfb71e808d69d323669df28163a002940d32dc3dfc2bf19089bebce8';
+
+// Run from the browser console to compute a hash without leaving the page:
+//   await hashPwd('your-password')  →  copy the logged string into GATE_HASH
+window.hashPwd = async function (pwd) {
+  const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pwd));
+  const h = [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
+  console.log('%cPaste into GATE_HASH in js/site.js:\n%c' + h,
+    'color:#888', 'color:#1a5fb4;font-weight:bold;font-family:monospace');
+  return h;
+};
+
+;(function () {
+  if (!GATE_HASH) return;
+
+  const K = 'bc_pw';
+  try {
+    const { h, e } = JSON.parse(localStorage.getItem(K) || '{}');
+    if (h === GATE_HASH && Date.now() < e) return;
+  } catch {}
+
+  document.body.insertAdjacentHTML('beforeend', `
+    <div id="pw-gate">
+      <div class="pw-box">
+        <div class="pw-monogram">BC</div>
+        <div class="pw-rule"></div>
+        <div class="pw-subtitle">This site is currently private</div>
+        <input type="password" id="pw-input" class="pw-input"
+               placeholder="Password" autocomplete="current-password" />
+        <button class="pw-btn" id="pw-btn">Enter</button>
+        <div class="pw-error" id="pw-error"></div>
+        <label class="pw-remember">
+          <input type="checkbox" id="pw-rem" checked />
+          Stay signed in for 30&nbsp;days
+        </label>
+      </div>
+    </div>
+  `);
+
+  async function sha256(s) {
+    const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+    return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
+  }
+
+  async function tryUnlock() {
+    const pw = document.getElementById('pw-input').value;
+    if (!pw) return;
+    const h = await sha256(pw);
+    if (h === GATE_HASH) {
+      const days = document.getElementById('pw-rem').checked ? 30 : 1;
+      localStorage.setItem(K, JSON.stringify({ h, e: Date.now() + days * 864e5 }));
+      const gate = document.getElementById('pw-gate');
+      gate.classList.add('out');
+      setTimeout(() => gate.remove(), 700);
+    } else {
+      const input = document.getElementById('pw-input');
+      input.classList.add('shake');
+      input.value = '';
+      document.getElementById('pw-error').textContent = 'Incorrect password.';
+      input.focus();
+      setTimeout(() => {
+        input.classList.remove('shake');
+        document.getElementById('pw-error').textContent = '';
+      }, 2000);
+    }
+  }
+
+  document.getElementById('pw-btn').addEventListener('click', tryUnlock);
+  document.getElementById('pw-input').addEventListener('keydown', function (ev) {
+    if (ev.key === 'Enter') tryUnlock();
+  });
+  setTimeout(function () {
+    const inp = document.getElementById('pw-input');
+    if (inp) inp.focus();
+  }, 80);
+})();
+
 // Escape only text we don't want to treat as HTML. Fields that may
 // legitimately contain HTML tags (abstracts, venues, bios) are passed
 // through raw — so authors can bold words, italicize journal names,
@@ -12,6 +94,21 @@ function esc(s) {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
+}
+
+// While PREVIEWING LOCALLY, browsers cache images hard — so swapping in a
+// new portrait.jpg or thumbnail won't show until a manual hard-refresh.
+// Append a cache-buster, but ONLY on localhost/file:// previews. The
+// deployed site keeps normal caching so images stay fast for visitors.
+const IS_LOCAL_PREVIEW =
+  location.protocol === 'file:' ||
+  location.hostname === 'localhost' ||
+  location.hostname === '127.0.0.1';
+
+function bust(path) {
+  if (!path || !IS_LOCAL_PREVIEW) return path;
+  if (/^(https?:|data:)/i.test(path)) return path;   // leave remote/inline URLs alone
+  return path + (path.indexOf('?') === -1 ? '?' : '&') + 'v=' + Date.now();
 }
 
 const SOCIAL_ICONS = {
@@ -27,11 +124,12 @@ function renderNav(activePage, profile) {
   const nav = document.getElementById('topnav');
   if (!nav) return;
   const items = [
-    { key: 'research', label: 'Research', href: 'index.html' },
-    { key: 'cv',       label: 'CV',       href: profile.cv || 'files/cv.pdf' },
-    { key: 'teaching', label: 'Teaching', href: 'teaching.html' },
-    { key: 'data',     label: 'Data',     href: 'data.html' },
-    { key: 'contact',  label: 'Contact',  href: 'index.html#contact' }
+    { key: 'research',   label: 'Research',   href: 'index.html' },
+    { key: 'cv',         label: 'CV',         href: profile.cv || 'files/cv.pdf' },
+    { key: 'teaching',   label: 'Teaching',   href: 'teaching.html' },
+    { key: 'data',       label: 'Data',       href: 'data.html' },
+    { key: 'favourites', label: 'Favourites', href: 'favourites.html' },
+    { key: 'contact',    label: 'Contact',    href: 'index.html#contact' }
   ];
   nav.innerHTML = '<ul>' + items.map(i =>
     `<li><a href="${esc(i.href)}"${i.key === activePage ? ' class="active"' : ''}>${esc(i.label)}</a></li>`
@@ -42,8 +140,10 @@ function renderHero(profile, opts = {}) {
   const hero = document.getElementById('hero');
   if (!hero) return;
 
-  const portraitHTML = profile.portrait
-    ? `<img class="portrait" src="${esc(profile.portrait)}" alt="${esc(profile.name)}" />`
+  // Portrait only appears on the front page. Secondary pages pass
+  // hidePortrait:true so the profile photo isn't repeated everywhere.
+  const portraitHTML = (profile.portrait && !opts.hidePortrait)
+    ? `<img class="portrait" src="${esc(bust(profile.portrait))}" alt="${esc(profile.name)}" />`
     : '';
 
   const socialsHTML = (profile.socials || []).map(s => {
@@ -125,7 +225,7 @@ function renderPaper(p) {
   // url, the thumbnail links to it; otherwise it's just an image / placeholder.
   const hasLink = p.url && p.url !== '#';
   const thumbImg = p.thumb
-    ? `<img src="${esc(p.thumb)}" alt="${esc(p.title)}">`
+    ? `<img src="${esc(bust(p.thumb))}" alt="${esc(p.title)}">`
     : '';
   const thumbInner = thumbImg
     ? (hasLink ? `<a href="${esc(p.url)}">${thumbImg}</a>` : thumbImg)
@@ -165,7 +265,7 @@ function renderPaper(p) {
         ${p.venue ? `<div class="venue">${p.venue}</div>` : ''}
         ${tagsHTML}
         ${awardsHTML}
-        ${p.abstract ? `<p class="abstract">${p.abstract}</p>` : ''}
+        ${p.abstract ? `<button class="abstract-toggle" aria-expanded="false">Abstract<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" style="margin-left:5px;vertical-align:middle"><polyline points="6 9 12 15 18 9"/></svg></button><div class="abstract-body"><p class="abstract">${p.abstract}</p></div>` : ''}
         ${linksHTML}
         ${presentationsHTML}
       </div>
@@ -214,6 +314,99 @@ function renderTeachingSection(id, heading, items) {
   `;
 }
 
+// ---- Favourites page: papers & quotes grouped by field/category ----
+function renderFavouritePaper(p) {
+  const cite = p.url && p.url !== '#' && p.url !== ''
+    ? `<a href="${esc(p.url)}">${p.citation}</a>`
+    : (p.citation || '');
+  const note = p.note ? `<div class="fav-note">${p.note}</div>` : '';
+  return `<li class="fav-paper"><span class="fav-cite">${cite}</span>${note}</li>`;
+}
+
+function renderFavouriteQuote(q) {
+  const src = q.source ? `<cite class="fav-source">${q.source}</cite>` : '';
+  return `<figure class="fav-quote"><blockquote>${q.text || ''}</blockquote>${src}</figure>`;
+}
+
+function renderFavouriteCategory(cat) {
+  const papers = (cat.papers && cat.papers.length)
+    ? `<ul class="fav-papers">${cat.papers.map(renderFavouritePaper).join('')}</ul>`
+    : '';
+  const quotes = (cat.quotes && cat.quotes.length)
+    ? `<div class="fav-quotes">${cat.quotes.map(renderFavouriteQuote).join('')}</div>`
+    : '';
+  return `
+    <div class="fav-category">
+      <h3 class="fav-cat-name">${esc(cat.name || '')}</h3>
+      ${papers}
+      ${quotes}
+    </div>
+  `;
+}
+
+function renderFavourites(fav) {
+  const el = document.getElementById('favourites');
+  if (!el) return;
+  const cats = (fav && fav.categories) || [];
+  if (!cats.length) { el.innerHTML = ''; return; }
+  const intro = fav.intro ? `<p class="fav-intro">${fav.intro}</p>` : '';
+  el.innerHTML = intro + cats.map(renderFavouriteCategory).join('');
+}
+
+// ─── Interactive features ─────────────────────────────────────────────────────
+
+function initProgressBar() {
+  if (document.querySelector('.progress-bar')) return;
+  const bar = document.createElement('div');
+  bar.className = 'progress-bar';
+  document.body.prepend(bar);
+  window.addEventListener('scroll', function () {
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+    bar.style.width = Math.round(scrollTop / (scrollHeight - clientHeight) * 100) + '%';
+  }, { passive: true });
+}
+
+function initScrollAnimations() {
+  const viewH = window.innerHeight;
+  const obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
+
+  let idx = 0;
+  document.querySelectorAll('.paper, h2.section, .teaching-item, .fav-category, #about p').forEach(function (el) {
+    const rect = el.getBoundingClientRect();
+    if (rect.bottom > viewH * 0.85) {
+      el.classList.add('fade-in-up');
+      el.style.transitionDelay = (idx % 4) * 60 + 'ms';
+      obs.observe(el);
+      idx++;
+    }
+  });
+}
+
+function initNavScroll() {
+  const nav = document.querySelector('nav.topnav');
+  if (!nav) return;
+  window.addEventListener('scroll', function () {
+    nav.classList.toggle('scrolled', window.scrollY > 50);
+  }, { passive: true });
+}
+
+function initPortrait() {
+  const portrait = document.querySelector('header.hero .portrait');
+  if (!portrait) return;
+  if (portrait.complete && portrait.naturalHeight !== 0) {
+    portrait.classList.add('loaded');
+  } else {
+    portrait.addEventListener('load', function () { portrait.classList.add('loaded'); });
+  }
+}
+
 async function loadContent() {
   // Cache-bust so edits show up immediately in the preview panel.
   const res = await fetch('content.json?v=' + Date.now());
@@ -240,6 +433,7 @@ window.renderPage = async function (page) {
       renderHero(profile, {
         nameOverride: 'Teaching',
         titleOverride: 'Courses & Teaching Materials',
+        hidePortrait: true,
         hideAffiliation: true,
         hideContact: true
       });
@@ -251,11 +445,26 @@ window.renderPage = async function (page) {
       renderHero(profile, {
         nameOverride: 'Data',
         titleOverride: 'Public datasets from my research',
+        hidePortrait: true,
         hideAffiliation: true,
         hideContact: true
       });
       renderTeachingSection('data-list', 'Datasets', data.data);
+    } else if (page === 'favourites') {
+      renderHero(profile, {
+        nameOverride: 'Favourites',
+        titleOverride: 'Papers & quotes I keep coming back to',
+        hidePortrait: true,
+        hideAffiliation: true,
+        hideContact: true
+      });
+      renderFavourites(data.favourites);
     }
+
+    initProgressBar();
+    initScrollAnimations();
+    initNavScroll();
+    initPortrait();
   } catch (err) {
     console.error(err);
     document.body.innerHTML =
@@ -267,3 +476,13 @@ window.renderPage = async function (page) {
       '<p>Underlying error: ' + esc(err.message) + '</p></div>';
   }
 };
+
+// ─── Abstract toggle (event delegation — handles all dynamically rendered papers) ──
+document.addEventListener('click', function (e) {
+  const btn = e.target.closest('.abstract-toggle');
+  if (!btn) return;
+  const body = btn.nextElementSibling;
+  const isOpen = btn.getAttribute('aria-expanded') === 'true';
+  btn.setAttribute('aria-expanded', String(!isOpen));
+  body.style.maxHeight = isOpen ? '0' : body.scrollHeight + 'px';
+});
