@@ -161,6 +161,22 @@
             "source": "— Some Economist"
           }
         ]
+      },
+      {
+        "name": "Finance",
+        "papers": [
+          {
+            "citation": "Pastor, L. and Pietro Veronesi (2009), \"Technological Revolutions and Stock Prices,\" <i>American Economic Review</i>.",
+            "url": "https://www.aeaweb.org/articles?id=10.1257/aer.99.4.1451",
+            "note": "A wonderful paper showing how uncertainty about tech being adopted into the whole economy introduces systematic risk, and when the resulting discount risk outruns cash flows, we get cyclical behaviour in stock prices."
+          }
+        ],
+        "quotes": [
+          {
+            "text": "Another favourite line — on economics, method, or anything else.",
+            "source": "— Some Economist"
+          }
+        ]
       }
     ]
   }
