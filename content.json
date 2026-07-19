@@ -8,8 +8,9 @@
     "portrait": "images/portrait.jpg",
     "cv": "files/cv.pdf",
     "bio": [
-      "I am a pre-doctoral fellow in economics at Yale University. My research interests are in <b>spatial economics</b>, <b>macroeconomics</b>, and <b>industrial organization</b>. I study how heterogeneous firms shape aggregate outcomes through investment, pricing, and entry decisions.",
-      "I graduated with a B.A. in Economics and Mathematics in May 2026, also from Yale. You can find my CV <a href=\"files/cv.pdf\">here</a>."
+      "I am a pre-doctoral fellow in economics at Yale University.  My work focuses on understanding the mechanisms of economic growth, the drivers of innovation, and why some firms and regions outpace others.",
+      "I graduated with a B.A. in Economics and Mathematics in May 2026, also from Yale. You can find my CV <a href=\"files/cv.pdf\">here</a>.",
+      "Research Interests: Firm Dynamics, Spatial Economics, Economic History"
     ],
     "socials": [
       { "type": "email",    "url": "mailto:brandon.chan@yale.edu" },
