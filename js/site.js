@@ -1,488 +1,903 @@
 /* ------------------------------------------------------------------
-   Renders content.json into the page. Every page has empty
-   containers (divs with ids) — this script fills them in.
+   Brandon S.C. Chan — Academic Website Engine
+   Open Editorial Architecture + Apple & Google Design System
    ------------------------------------------------------------------ */
 
-// ─── Password gate ───────────────────────────────────────────────────────────
-// Set GATE_HASH to the SHA-256 hex of your password to enable protection.
-// Leave '' to disable (good for local development and initial deploy).
-// To generate a hash: open tools/generate-hash.html, type your password,
-// copy the hex output, paste it here, then redeploy the site.
-const GATE_HASH = 'cd8cd209dfb71e808d69d323669df28163a002940d32dc3dfc2bf19089bebce8';
+(function () {
+  'use strict';
 
-// Run from the browser console to compute a hash without leaving the page:
-//   await hashPwd('your-password')  →  copy the logged string into GATE_HASH
-window.hashPwd = async function (pwd) {
-  const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pwd));
-  const h = [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
-  console.log('%cPaste into GATE_HASH in js/site.js:\n%c' + h,
-    'color:#888', 'color:#1a5fb4;font-weight:bold;font-family:monospace');
-  return h;
-};
+  const THEME_KEY = 'bc_theme_v5';
 
-;(function () {
-  if (!GATE_HASH) return;
+  const SOCIAL_ICONS = {
+    email:    '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/></svg>',
+    scholar:  '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg>',
+    x:        '<svg width="13.5" height="13.5" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
+    linkedin: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>',
+    github:   '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>',
+    cv:       '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>'
+  };
 
-  const K = 'bc_pw';
-  try {
-    const { h, e } = JSON.parse(localStorage.getItem(K) || '{}');
-    if (h === GATE_HASH && Date.now() < e) return;
-  } catch {}
+  const AWARD_ICON = '<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>';
 
-  document.body.insertAdjacentHTML('beforeend', `
-    <div id="pw-gate">
-      <div class="pw-box">
-        <div class="pw-monogram">BC</div>
-        <div class="pw-rule"></div>
-        <div class="pw-subtitle">This site is currently private</div>
-        <input type="password" id="pw-input" class="pw-input"
-               placeholder="Password" autocomplete="current-password" />
-        <button class="pw-btn" id="pw-btn">Enter</button>
-        <div class="pw-error" id="pw-error"></div>
-        <label class="pw-remember">
-          <input type="checkbox" id="pw-rem" checked />
-          Stay signed in for 30&nbsp;days
-        </label>
-      </div>
-    </div>
-  `);
-
-  async function sha256(s) {
-    const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
-    return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
+  function getSavedTheme() {
+    try {
+      const saved = localStorage.getItem(THEME_KEY);
+      if (saved === 'dark' || saved === 'light') return saved;
+    } catch (_) {}
+    return 'light';
   }
 
-  async function tryUnlock() {
-    const pw = document.getElementById('pw-input').value;
-    if (!pw) return;
-    const h = await sha256(pw);
-    if (h === GATE_HASH) {
-      const days = document.getElementById('pw-rem').checked ? 30 : 1;
-      localStorage.setItem(K, JSON.stringify({ h, e: Date.now() + days * 864e5 }));
-      const gate = document.getElementById('pw-gate');
-      gate.classList.add('out');
-      setTimeout(() => gate.remove(), 700);
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    try {
+      localStorage.setItem(THEME_KEY, theme);
+    } catch (_) {}
+    const btn = document.getElementById('theme-toggle');
+    if (!btn) return;
+    const icon = btn.querySelector('.theme-icon');
+    if (!icon) return;
+    if (theme === 'dark') {
+      icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
     } else {
-      const input = document.getElementById('pw-input');
-      input.classList.add('shake');
-      input.value = '';
-      document.getElementById('pw-error').textContent = 'Incorrect password.';
-      input.focus();
-      setTimeout(() => {
-        input.classList.remove('shake');
-        document.getElementById('pw-error').textContent = '';
-      }, 2000);
+      icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
     }
   }
 
-  document.getElementById('pw-btn').addEventListener('click', tryUnlock);
-  document.getElementById('pw-input').addEventListener('keydown', function (ev) {
-    if (ev.key === 'Enter') tryUnlock();
-  });
-  setTimeout(function () {
-    const inp = document.getElementById('pw-input');
-    if (inp) inp.focus();
-  }, 80);
-})();
+  function initThemeToggle() {
+    applyTheme(getSavedTheme());
+    const btn = document.getElementById('theme-toggle');
+    if (!btn) return;
+    btn.onclick = () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      applyTheme(current === 'dark' ? 'light' : 'dark');
+    };
+  }
 
-// Escape only text we don't want to treat as HTML. Fields that may
-// legitimately contain HTML tags (abstracts, venues, bios) are passed
-// through raw — so authors can bold words, italicize journal names,
-// or drop in links.
-function esc(s) {
-  return String(s)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-}
+  function initProgressBar() {
+    const bar = document.getElementById('progress-bar');
+    const nav = document.getElementById('topnav');
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (bar) {
+        const pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+        bar.style.width = pct + '%';
+      }
+      if (nav) {
+        nav.classList.toggle('scrolled', scrollTop > 36);
+      }
+    }, { passive: true });
+  }
 
-// While PREVIEWING LOCALLY, browsers cache images hard — so swapping in a
-// new portrait.jpg or thumbnail won't show until a manual hard-refresh.
-// Append a cache-buster, but ONLY on localhost/file:// previews. The
-// deployed site keeps normal caching so images stay fast for visitors.
-const IS_LOCAL_PREVIEW =
-  location.protocol === 'file:' ||
-  location.hostname === 'localhost' ||
-  location.hostname === '127.0.0.1';
+  // ─── Render Flat Editorial Paper Rows + 3D Offprint Sheet ─────────────────
+  function renderPaperList(papers, listEl, sectionEl) {
+    if (!listEl || !sectionEl) return;
+    if (!papers || papers.length === 0) {
+      sectionEl.style.display = 'none';
+      return;
+    }
+    sectionEl.style.display = 'block';
+    listEl.innerHTML = '';
 
-function bust(path) {
-  if (!path || !IS_LOCAL_PREVIEW) return path;
-  if (/^(https?:|data:)/i.test(path)) return path;   // leave remote/inline URLs alone
-  return path + (path.indexOf('?') === -1 ? '?' : '&') + 'v=' + Date.now();
-}
+    papers.forEach((p, idx) => {
+      const row = document.createElement('div');
+      row.className = 'paper';
+      if (p.fields && Array.isArray(p.fields)) {
+        row.dataset.fields = p.fields.join('|');
+      }
 
-const SOCIAL_ICONS = {
-  email:    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 4l8 8 8-8"/></svg>',
-  scholar:  '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L1 9l11 7 9-5.73V17h2V9z M5 13.18v4L12 21l7-3.82v-4L12 17z"/></svg>',
-  x:        '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zM17.083 19.77h1.833L7.084 4.126H5.117z"/></svg>',
-  linkedin: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.22 8h4.56v14H.22V8zm7.4 0h4.37v1.92h.06c.61-1.15 2.09-2.36 4.31-2.36 4.61 0 5.46 3.03 5.46 6.97V22h-4.56v-6.56c0-1.56-.03-3.57-2.18-3.57-2.18 0-2.51 1.7-2.51 3.46V22H7.62V8z"/></svg>',
-  github:   '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.74.5 12a11.5 11.5 0 0 0 7.86 10.93c.58.1.79-.25.79-.56v-2.1c-3.2.7-3.88-1.37-3.88-1.37-.53-1.34-1.29-1.7-1.29-1.7-1.06-.72.08-.7.08-.7 1.17.08 1.78 1.2 1.78 1.2 1.04 1.78 2.72 1.27 3.38.97.11-.75.41-1.27.74-1.56-2.55-.29-5.23-1.28-5.23-5.67 0-1.25.44-2.27 1.17-3.07-.12-.29-.51-1.46.1-3.05 0 0 .95-.3 3.12 1.17a10.8 10.8 0 0 1 5.68 0c2.17-1.47 3.12-1.17 3.12-1.17.61 1.59.22 2.76.11 3.05.73.8 1.17 1.82 1.17 3.07 0 4.4-2.69 5.37-5.25 5.65.42.37.8 1.1.8 2.22v3.29c0 .31.21.67.8.55A11.5 11.5 0 0 0 23.5 12C23.5 5.74 18.27.5 12 .5z"/></svg>',
-  website:  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>'
-};
+      const tagText = p.tag || p.venue || 'Working Paper';
+      const eqText = p.equation || 'E[U(c)] = max';
+      const hasUrl = p.url && p.url !== '#';
+      const yearMatch = ((p.venue || '') + ' ' + (p.tag || '')).match(/20\d{2}/);
+      const pdfLabel = hasUrl ? 'PDF ↗' : 'WP · ' + (yearMatch ? yearMatch[0] : (2025 - idx));
 
-function renderNav(activePage, profile) {
-  const nav = document.getElementById('topnav');
-  if (!nav) return;
-  const items = [
-    { key: 'research',   label: 'Research',   href: 'index.html' },
-    { key: 'cv',         label: 'CV',         href: profile.cv || 'files/cv.pdf' },
-    { key: 'teaching',   label: 'Teaching',   href: 'teaching.html' },
-    { key: 'data',       label: 'Data',       href: 'data.html' },
-    { key: 'favourites', label: 'Favourites', href: 'favourites.html' },
-    { key: 'contact',    label: 'Contact',    href: 'index.html#contact' }
-  ];
-  nav.innerHTML = '<ul>' + items.map(i =>
-    `<li><a href="${esc(i.href)}"${i.key === activePage ? ' class="active"' : ''}>${esc(i.label)}</a></li>`
-  ).join('') + '</ul>';
-}
+      const offprintHtml = `
+        <div class="thumb-stage">
+          <div class="thumb-manuscript" title="${hasUrl ? 'Click to toggle abstract or view PDF' : 'Click to toggle abstract'}">
+            <div>
+              <div class="ms-header">${tagText}</div>
+              <div class="ms-title">${p.title}</div>
+              <div class="ms-author">${p.authors || 'Brandon S.C. Chan'}</div>
+              <div class="ms-eq">${eqText}</div>
+            </div>
+            <div class="ms-lines">
+              <span></span><span></span><span></span><span></span>
+            </div>
+            <div class="ms-footer">
+              <span>YALE ECON</span>
+              <span>${pdfLabel}</span>
+            </div>
+          </div>
+        </div>
+      `;
 
-function renderHero(profile, opts = {}) {
-  const hero = document.getElementById('hero');
-  if (!hero) return;
+      const titleInner = hasUrl
+        ? `<a href="${p.url}" target="_blank" rel="noopener">${p.title}</a>`
+        : p.title;
+      const titleHtml = `<div class="title">${titleInner}</div>`;
 
-  // Portrait only appears on the front page. Secondary pages pass
-  // hidePortrait:true so the profile photo isn't repeated everywhere.
-  const portraitHTML = (profile.portrait && !opts.hidePortrait)
-    ? `<img class="portrait" src="${esc(bust(profile.portrait))}" alt="${esc(profile.name)}" />`
-    : '';
+      const authorsPart = p.authors ? `<span class="authors">${p.authors}</span>` : '';
+      const venuePart = p.venue ? `<span class="venue">${authorsPart ? '&middot; ' : ''}${p.venue}</span>` : '';
+      const metaHtml = (authorsPart || venuePart)
+        ? `<div class="paper-meta-line">${authorsPart}${venuePart}</div>`
+        : '';
 
-  const socialsHTML = (profile.socials || []).map(s => {
-    const icon = SOCIAL_ICONS[s.type] || SOCIAL_ICONS.website;
-    return `<a href="${esc(s.url)}" title="${esc(s.type)}" aria-label="${esc(s.type)}">${icon}</a>`;
-  }).join('');
+      const fields = p.fields || [];
+      const badgesHtml = fields.length > 0
+        ? `<div class="badges">${fields.map(f => `<span class="badge">${f}</span>`).join('')}</div>`
+        : '';
 
-  const title = opts.titleOverride || profile.title;
-  const subtitle = opts.subtitle;
+      let awards = [];
+      if (p.awards_list && p.awards_list.length > 0) {
+        awards = p.awards_list;
+      } else if (p.badges && Array.isArray(p.badges)) {
+        p.badges.forEach(b => {
+          if (typeof b === 'string' && b.indexOf(',') !== -1) {
+            const i = b.indexOf(',');
+            awards.push({ title: b.slice(0, i).trim(), desc: b.slice(i + 1).trim() });
+          }
+        });
+      }
+      const awardsHtml = awards.length > 0
+        ? `<div class="awards">${awards.map(a => {
+            const titleNode = a.url
+              ? `<a href="${a.url}" target="_blank" rel="noopener">${a.title}</a>`
+              : a.title;
+            return `
+            <div class="award">
+              <span class="award-icon">${AWARD_ICON}</span>
+              <span><span class="award-title">${titleNode}</span>${a.desc ? ` <span class="award-desc">&mdash; ${a.desc}</span>` : ''}</span>
+            </div>`;
+          }).join('')}</div>`
+        : '';
 
-  hero.innerHTML = `
-    ${portraitHTML}
-    <h1>${esc(opts.nameOverride || profile.name)}</h1>
-    <div class="title">${esc(title)}</div>
-    ${profile.affiliation && !opts.hideAffiliation ? `<div class="affiliation">${esc(profile.affiliation)}</div>` : ''}
-    ${subtitle ? `<div class="affiliation">${esc(subtitle)}</div>` : ''}
-    ${!opts.hideContact ? `
-      <div class="contact" id="contact">
-        ${esc(profile.email.replace('@', ' [at] '))}
-        ${profile.location ? ` <span>·</span> ${esc(profile.location)}` : ''}
-      </div>
-      <div class="socials">${socialsHTML}</div>
-    ` : ''}
-  `;
-}
+      const presHtml = p.presentations
+        ? `<div class="presentations"><b>Presentations:</b> ${p.presentations.replace(/^Presentations:\s*/i, '')}</div>`
+        : '';
 
-function renderFooter(profile) {
-  const f = document.getElementById('footer');
-  if (f) f.innerHTML = esc(profile.footer || '');
-}
+      const mediaHtml = (p.media && Array.isArray(p.media) && p.media.length > 0)
+        ? `<div class="media-coverage"><b>Media Coverage:</b> ${p.media.map(m => {
+            const outlet = m.outlet ? `<i>${m.outlet}</i>: ` : '';
+            return `<a href="${m.url}" target="_blank" rel="noopener">${outlet}&ldquo;${m.title}&rdquo; &#8599;</a>`;
+          }).join(' <span class="media-sep">&middot;</span> ')}</div>`
+        : '';
 
-function renderAbout(bio) {
-  const about = document.getElementById('about');
-  if (!about || !bio) return;
-  about.innerHTML = `
-    <h2 class="section">About</h2>
-    ${bio.map(p => `<p>${p}</p>`).join('')}
-  `;
-}
+      let actionsItems = '';
+      if (p.abstract) {
+        actionsItems += `
+          <button type="button" class="action-chip abstract-toggle" aria-expanded="false">
+            <span>Abstract</span>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>`;
+      }
+      if (p.links && p.links.length > 0) {
+        actionsItems += p.links
+          .filter(l => l.url && l.url !== '#')
+          .map(l => `<a class="action-chip" href="${l.url}" target="_blank" rel="noopener">${l.label} &#8599;</a>`)
+          .join('');
+      }
+      if (p.bibtex) {
+        actionsItems += `<button type="button" class="action-chip bibtex-toggle" aria-expanded="false">BibTeX</button>`;
+      }
+      const actionsHtml = actionsItems ? `<div class="paper-actions">${actionsItems}</div>` : '';
 
-// Star/award icon used in front of each "award" entry.
-const AWARD_ICON = '<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>';
+      const abstractDrawerHtml = p.abstract
+        ? `<div class="drawer-grid abstract-drawer"><div class="drawer-inner"><p class="abstract">${p.abstract}</p></div></div>`
+        : '';
 
-// Split a paper's `badges` array into two visual groups:
-//   - tags:   short, comma-free strings -> small grey pills
-//   - awards: anything with a comma, or any {title, desc} object
-// This means you don't have to restructure content.json — long
-// award descriptions automatically render in the nicer style.
-function classifyBadges(badges) {
-  const tags = [], awards = [];
-  for (const b of (badges || [])) {
-    if (b && typeof b === 'object') {
-      awards.push({
-        title: b.title || b.name || '',
-        desc:  b.desc  || b.description || ''
+      const bibtexDrawerHtml = p.bibtex
+        ? `<div class="drawer-grid bibtex-drawer"><div class="drawer-inner"><div class="bibtex-box"><button type="button" class="copy-bibtex-btn">Copy</button><pre>${p.bibtex}</pre></div></div></div>`
+        : '';
+
+      row.innerHTML = `
+        ${offprintHtml}
+        <div>
+          ${titleHtml}
+          ${metaHtml}
+          ${badgesHtml}
+          ${awardsHtml}
+          ${actionsHtml}
+          ${abstractDrawerHtml}
+          ${bibtexDrawerHtml}
+          ${presHtml}
+          ${mediaHtml}
+        </div>
+      `;
+
+      const absBtn = row.querySelector('.abstract-toggle');
+      const absDrawer = row.querySelector('.abstract-drawer');
+      if (absBtn && absDrawer) {
+        absBtn.addEventListener('click', () => {
+          const isOpen = absDrawer.classList.toggle('open');
+          absBtn.setAttribute('aria-expanded', String(isOpen));
+        });
+      }
+
+      const bibBtn = row.querySelector('.bibtex-toggle');
+      const bibDrawer = row.querySelector('.bibtex-drawer');
+      if (bibBtn && bibDrawer) {
+        bibBtn.addEventListener('click', () => {
+          const isOpen = bibDrawer.classList.toggle('open');
+          bibBtn.setAttribute('aria-expanded', String(isOpen));
+        });
+      }
+
+      const copyBtn = row.querySelector('.copy-bibtex-btn');
+      if (copyBtn && p.bibtex) {
+        copyBtn.addEventListener('click', () => {
+          if (navigator.clipboard) navigator.clipboard.writeText(p.bibtex);
+          copyBtn.textContent = 'Copied!';
+          setTimeout(() => { copyBtn.textContent = 'Copy'; }, 1800);
+        });
+      }
+
+      const thumb = row.querySelector('.thumb-manuscript');
+      if (thumb) {
+        thumb.addEventListener('click', () => {
+          if (absBtn) absBtn.click();
+          else if (hasUrl) window.open(p.url, '_blank', 'noopener');
+        });
+      }
+
+      listEl.appendChild(row);
+    });
+  }
+
+  function renderHonours(honours) {
+    const sec = document.getElementById('honours-section');
+    const list = document.getElementById('honours-list');
+    if (!sec || !list) return;
+    if (!honours || honours.length === 0) {
+      sec.style.display = 'none';
+      return;
+    }
+    sec.style.display = 'block';
+    list.innerHTML = honours.map(h => {
+      const detail = h.detail || h.org || '';
+      return `
+        <li class="honour-item">
+          <span class="honour-year">${h.year || ''}</span>
+          <span>
+            <span class="honour-title">${h.title}</span>
+            ${detail ? `<span class="honour-org"> &mdash; ${detail}</span>` : ''}
+          </span>
+        </li>
+      `;
+    }).join('');
+  }
+
+  function renderResearchView(data) {
+    const nameEl = document.getElementById('hero-name');
+    if (nameEl && data.name) nameEl.textContent = data.name;
+
+    const subEl = document.getElementById('hero-subtitle');
+    if (subEl && data.title) subEl.textContent = data.title;
+
+    const affEl = document.getElementById('hero-affiliation');
+    if (affEl && data.affiliation) affEl.textContent = data.affiliation;
+
+    const locEl = document.getElementById('hero-location');
+    if (locEl && data.location) locEl.textContent = data.location;
+
+    const emailEl = document.querySelector('.contact-email');
+    if (emailEl && data.email) {
+      const displayEmail = data.email.replace('@', ' [at] ');
+      emailEl.textContent = displayEmail;
+      emailEl.onclick = e => {
+        if (navigator.clipboard) {
+          e.preventDefault();
+          navigator.clipboard.writeText(data.email);
+          emailEl.textContent = 'Copied ' + data.email + ' ✓';
+          setTimeout(() => { emailEl.textContent = displayEmail; }, 1800);
+        }
+      };
+    }
+
+    const photoEl = document.getElementById('hero-photo');
+    if (photoEl && data.photo) {
+      photoEl.src = data.photo;
+      photoEl.alt = data.name || 'Brandon S.C. Chan';
+    }
+
+    const linksEl = document.getElementById('hero-links');
+    if (linksEl && data.links) {
+      linksEl.innerHTML = data.links
+        .filter(l => l.type !== 'cv')
+        .map(l => {
+          const icon = SOCIAL_ICONS[l.type] || SOCIAL_ICONS.cv;
+          const isExternal = l.url.startsWith('http');
+          const target = isExternal ? ' target="_blank" rel="noopener"' : '';
+          return `<a href="${l.url}" title="${l.label}" aria-label="${l.label}"${target}>${icon}</a>`;
+        }).join('');
+    }
+
+    const bioEl = document.getElementById('hero-bio');
+    if (bioEl && data.bio) {
+      bioEl.innerHTML = data.bio.map(p => `<p>${p}</p>`).join('');
+    }
+
+    // Interactive Research Field Filter Chips under About
+    const pillsEl = document.getElementById('interest-pills');
+    if (pillsEl && data.research_interests) {
+      let activeField = null;
+      pillsEl.innerHTML = data.research_interests.map(field =>
+        `<button type="button" class="interest-pill" data-field="${field}">${field}</button>`
+      ).join('');
+
+      pillsEl.querySelectorAll('.interest-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const field = btn.dataset.field;
+          if (activeField === field) {
+            activeField = null;
+            pillsEl.querySelectorAll('.interest-pill').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.paper').forEach(row => {
+              row.classList.remove('filtered-dim', 'filtered-match');
+            });
+          } else {
+            activeField = field;
+            pillsEl.querySelectorAll('.interest-pill').forEach(b => {
+              b.classList.toggle('active', b.dataset.field === field);
+            });
+            document.querySelectorAll('.paper').forEach(row => {
+              const fields = (row.dataset.fields || '').split('|');
+              const match = fields.some(f => f === field || f.toLowerCase().includes(field.toLowerCase()));
+              row.classList.toggle('filtered-match', match);
+              row.classList.toggle('filtered-dim', !match);
+            });
+          }
+        });
       });
-    } else if (typeof b === 'string' && b.indexOf(',') !== -1) {
-      const i = b.indexOf(',');
-      awards.push({ title: b.slice(0, i).trim(), desc: b.slice(i + 1).trim() });
-    } else if (b) {
-      tags.push(String(b));
     }
-  }
-  return { tags, awards };
-}
 
-function renderAward(a) {
-  const desc = a.desc ? ` <span class="award-desc">— ${esc(a.desc)}</span>` : '';
-  return `
-    <div class="award">
-      <span class="award-icon">${AWARD_ICON}</span>
-      <span><span class="award-title">${esc(a.title)}</span>${desc}</span>
-    </div>
-  `;
-}
+    renderPaperList(data.working_papers, document.getElementById('working-papers-list'), document.getElementById('working-papers-section'));
+    renderPaperList(data.publications, document.getElementById('publications-list'), document.getElementById('publications-section'));
+    renderPaperList(data.work_in_progress, document.getElementById('wip-list'), document.getElementById('wip-section'));
+    renderPaperList(data.resting_papers, document.getElementById('resting-papers-list'), document.getElementById('resting-papers-section'));
+    renderHonours(data.honours);
 
-function renderPaper(p) {
-  // The "journal icon" thumbnail (brunopellegrino.com). If the paper has a
-  // url, the thumbnail links to it; otherwise it's just an image / placeholder.
-  const hasLink = p.url && p.url !== '#';
-  const thumbImg = p.thumb
-    ? `<img src="${esc(bust(p.thumb))}" alt="${esc(p.title)}">`
-    : '';
-  const thumbInner = thumbImg
-    ? (hasLink ? `<a href="${esc(p.url)}">${thumbImg}</a>` : thumbImg)
-    : '';
-  const thumbHTML = p.thumb
-    ? `<div class="thumb">${thumbInner}</div>`
-    : `<div class="thumb placeholder">PDF</div>`;
-
-  const { tags, awards } = classifyBadges(p.badges);
-
-  const tagsHTML = tags.length
-    ? `<div class="badges">${tags.map(t => `<span class="badge">${esc(t)}</span>`).join('')}</div>`
-    : '';
-
-  const awardsHTML = awards.length
-    ? `<div class="awards">${awards.map(renderAward).join('')}</div>`
-    : '';
-
-  const linksHTML = (p.links && p.links.length)
-    ? `<div class="links">${p.links.map(l => `<a href="${esc(l.url)}">[${esc(l.label)}]</a>`).join(' ')}</div>`
-    : '';
-
-  const presentationsHTML = p.presentations
-    ? `<div class="presentations"><b>Presentations:</b> ${p.presentations}</div>`
-    : '';
-
-  const titleHTML = p.url && p.url !== '#'
-    ? `<a href="${esc(p.url)}">${esc(p.title)}</a>`
-    : esc(p.title);
-
-  return `
-    <div class="paper">
-      ${thumbHTML}
-      <div>
-        <div class="title">${titleHTML}</div>
-        ${p.authors ? `<div class="authors">${esc(p.authors)}</div>` : ''}
-        ${p.venue ? `<div class="venue">${p.venue}</div>` : ''}
-        ${tagsHTML}
-        ${awardsHTML}
-        ${p.abstract ? `<button class="abstract-toggle" aria-expanded="false">Abstract<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" style="margin-left:5px;vertical-align:middle"><polyline points="6 9 12 15 18 9"/></svg></button><div class="abstract-body"><p class="abstract">${p.abstract}</p></div>` : ''}
-        ${linksHTML}
-        ${presentationsHTML}
-      </div>
-    </div>
-  `;
-}
-
-function renderWIP(p) {
-  return `
-    <div class="paper">
-      <div></div>
-      <div>
-        <div class="title">${esc(p.title)}</div>
-        ${p.authors ? `<div class="authors">${esc(p.authors)}</div>` : ''}
-        ${p.abstract ? `<p class="abstract">${p.abstract}</p>` : ''}
-      </div>
-    </div>
-  `;
-}
-
-function renderPaperSection(id, heading, papers, wip = false) {
-  const el = document.getElementById(id);
-  if (!el || !papers || !papers.length) { if (el) el.innerHTML = ''; return; }
-  el.innerHTML = `
-    <h2 class="section">${esc(heading)}</h2>
-    ${papers.map(wip ? renderWIP : renderPaper).join('')}
-  `;
-}
-
-function renderTeachingItem(item) {
-  return `
-    <div class="teaching-item">
-      <div class="course-title">${esc(item.course_title)}</div>
-      ${item.meta ? `<div class="course-meta">${esc(item.meta)}</div>` : ''}
-      ${item.description ? `<div class="course-desc">${item.description}</div>` : ''}
-    </div>
-  `;
-}
-
-function renderTeachingSection(id, heading, items) {
-  const el = document.getElementById(id);
-  if (!el || !items || !items.length) { if (el) el.innerHTML = ''; return; }
-  el.innerHTML = `
-    <h2 class="section">${esc(heading)}</h2>
-    ${items.map(renderTeachingItem).join('')}
-  `;
-}
-
-// ---- Favourites page: papers & quotes grouped by field/category ----
-function renderFavouritePaper(p) {
-  const cite = p.url && p.url !== '#' && p.url !== ''
-    ? `<a href="${esc(p.url)}">${p.citation}</a>`
-    : (p.citation || '');
-  const note = p.note ? `<div class="fav-note">${p.note}</div>` : '';
-  return `<li class="fav-paper"><span class="fav-cite">${cite}</span>${note}</li>`;
-}
-
-function renderFavouriteQuote(q) {
-  const src = q.source ? `<cite class="fav-source">${q.source}</cite>` : '';
-  return `<figure class="fav-quote"><blockquote>${q.text || ''}</blockquote>${src}</figure>`;
-}
-
-function renderFavouriteCategory(cat) {
-  const papers = (cat.papers && cat.papers.length)
-    ? `<ul class="fav-papers">${cat.papers.map(renderFavouritePaper).join('')}</ul>`
-    : '';
-  const quotes = (cat.quotes && cat.quotes.length)
-    ? `<div class="fav-quotes">${cat.quotes.map(renderFavouriteQuote).join('')}</div>`
-    : '';
-  return `
-    <div class="fav-category">
-      <h3 class="fav-cat-name">${esc(cat.name || '')}</h3>
-      ${papers}
-      ${quotes}
-    </div>
-  `;
-}
-
-function renderFavourites(fav) {
-  const el = document.getElementById('favourites');
-  if (!el) return;
-  const cats = (fav && fav.categories) || [];
-  if (!cats.length) { el.innerHTML = ''; return; }
-  const intro = fav.intro ? `<p class="fav-intro">${fav.intro}</p>` : '';
-  el.innerHTML = intro + cats.map(renderFavouriteCategory).join('');
-}
-
-// ─── Interactive features ─────────────────────────────────────────────────────
-
-function initProgressBar() {
-  if (document.querySelector('.progress-bar')) return;
-  const bar = document.createElement('div');
-  bar.className = 'progress-bar';
-  document.body.prepend(bar);
-  window.addEventListener('scroll', function () {
-    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-    bar.style.width = Math.round(scrollTop / (scrollHeight - clientHeight) * 100) + '%';
-  }, { passive: true });
-}
-
-function initScrollAnimations() {
-  const viewH = window.innerHeight;
-  const obs = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        obs.unobserve(e.target);
+    // Ensure visible sections always have sequential 01, 02, 03... indices
+    let secIdx = 1;
+    document.querySelectorAll('main > section').forEach(sec => {
+      if (sec.style.display !== 'none') {
+        const badge = sec.querySelector('.section-index');
+        if (badge) badge.textContent = String(secIdx++).padStart(2, '0');
       }
     });
-  }, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
 
-  let idx = 0;
-  document.querySelectorAll('.paper, h2.section, .teaching-item, .fav-category, #about p').forEach(function (el) {
-    const rect = el.getBoundingClientRect();
-    if (rect.bottom > viewH * 0.85) {
-      el.classList.add('fade-in-up');
-      el.style.transitionDelay = (idx % 4) * 60 + 'ms';
-      obs.observe(el);
-      idx++;
-    }
-  });
-}
-
-function initNavScroll() {
-  const nav = document.querySelector('nav.topnav');
-  if (!nav) return;
-  window.addEventListener('scroll', function () {
-    nav.classList.toggle('scrolled', window.scrollY > 50);
-  }, { passive: true });
-}
-
-function initPortrait() {
-  const portrait = document.querySelector('header.hero .portrait');
-  if (!portrait) return;
-  if (portrait.complete && portrait.naturalHeight !== 0) {
-    portrait.classList.add('loaded');
-  } else {
-    portrait.addEventListener('load', function () { portrait.classList.add('loaded'); });
-  }
-}
-
-async function loadContent() {
-  // Cache-bust so edits show up immediately in the preview panel.
-  const res = await fetch('content.json?v=' + Date.now());
-  if (!res.ok) throw new Error('Failed to load content.json');
-  return res.json();
-}
-
-// Entry point for each page. Call with the page key.
-window.renderPage = async function (page) {
-  try {
-    const data = await loadContent();
-    const profile = data.profile || {};
-
-    renderNav(page, profile);
-    renderFooter(profile);
-
-    if (page === 'research') {
-      renderHero(profile);
-      renderAbout(profile.bio);
-      renderPaperSection('working-papers',   'Working Papers',    data.working_papers);
-      renderPaperSection('published-papers', 'Published Papers',  data.published_papers);
-      renderPaperSection('work-in-progress', 'Work in Progress',  data.work_in_progress, true);
-    } else if (page === 'teaching') {
-      renderHero(profile, {
-        nameOverride: 'Teaching',
-        titleOverride: 'Courses & Teaching Materials',
-        hidePortrait: true,
-        hideAffiliation: true,
-        hideContact: true
-      });
-      const t = data.teaching || {};
-      renderTeachingSection('teaching-instructor', 'As Instructor',       t.instructor);
-      renderTeachingSection('teaching-ta',         'As Teaching Assistant', t.ta);
-      renderTeachingSection('teaching-materials',  'Teaching Materials',  t.materials);
-    } else if (page === 'data') {
-      renderHero(profile, {
-        nameOverride: 'Data',
-        titleOverride: 'Public datasets from my research',
-        hidePortrait: true,
-        hideAffiliation: true,
-        hideContact: true
-      });
-      renderTeachingSection('data-list', 'Datasets', data.data);
-    } else if (page === 'favourites') {
-      renderHero(profile, {
-        nameOverride: 'Favourites',
-        titleOverride: 'Papers & quotes I keep coming back to',
-        hidePortrait: true,
-        hideAffiliation: true,
-        hideContact: true
-      });
-      renderFavourites(data.favourites);
-    }
-
-    initProgressBar();
+    initHeroWaveCanvas();
+    init3DTiltAndRowGlow();
     initScrollAnimations();
-    initNavScroll();
-    initPortrait();
-  } catch (err) {
-    console.error(err);
-    document.body.innerHTML =
-      '<div style="max-width:700px;margin:80px auto;padding:0 24px;font-family:sans-serif">' +
-      '<h2>Couldn\u2019t load <code>content.json</code>.</h2>' +
-      '<p>If you are previewing locally, make sure you are serving the site over HTTP, not opening the HTML file directly. From this folder run:</p>' +
-      '<pre>python3 -m http.server 8000</pre>' +
-      '<p>then visit <a href="http://localhost:8000">http://localhost:8000</a>.</p>' +
-      '<p>Underlying error: ' + esc(err.message) + '</p></div>';
   }
-};
 
-// ─── Abstract toggle (event delegation — handles all dynamically rendered papers) ──
-document.addEventListener('click', function (e) {
-  const btn = e.target.closest('.abstract-toggle');
-  if (!btn) return;
-  const body = btn.nextElementSibling;
-  const isOpen = btn.getAttribute('aria-expanded') === 'true';
-  btn.setAttribute('aria-expanded', String(!isOpen));
-  body.style.maxHeight = isOpen ? '0' : body.scrollHeight + 'px';
-});
+  function renderDataView(data) {
+    const list = document.getElementById('data-list');
+    if (!list || !data.data) return;
+    list.innerHTML = data.data.map(d => {
+      const links = (d.links && d.links.length)
+        ? `<div class="paper-actions">${d.links.map(l => `<a class="action-chip" href="${l.url}" target="_blank" rel="noopener">${l.label} &#8599;</a>`).join('')}</div>`
+        : '';
+      return `
+        <div class="teaching-item">
+          <div class="course-title">${d.title}</div>
+          ${d.meta ? `<div class="course-meta">${d.meta}</div>` : ''}
+          ${d.description ? `<div class="course-desc">${d.description}</div>` : ''}
+          ${links}
+        </div>`;
+    }).join('');
+    initScrollAnimations();
+  }
+
+  // ─── Apple & DeepMind Topographic Iso-Contours + Curved Geodesic Network ──
+  let heroWaveCleanup = null;
+  function initHeroWaveCanvas() {
+    if (heroWaveCleanup) {
+      heroWaveCleanup();
+      heroWaveCleanup = null;
+    }
+    const hero = document.querySelector('header.hero');
+    const canvas = document.getElementById('hero-canvas');
+    if (!hero || !canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let width = 0, height = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let ribbons = [];
+    let hubs = [];
+    let arcs = [];
+    let shockwaves = [];
+    let pointer = { x: -9999, y: -9999, vx: 0, vy: 0, active: false };
+    let rafId = null;
+    let t = 0;
+
+    function buildScene() {
+      const rect = canvas.getBoundingClientRect();
+      width = rect.width;
+      height = rect.height;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      const isMobile = width < 600;
+      const numRibbons = isMobile ? 7 : 11;
+      const numCtrl = isMobile ? 16 : 26;
+      ribbons = [];
+
+      // 1. Continuous Topographic Equipotential Ribbons (Apple / DeepMind Silk Isolines)
+      for (let r = 0; r < numRibbons; r++) {
+        const v = (r + 0.5) / numRibbons;
+        const baseY = height * (0.08 + v * 0.78);
+        const nodes = [];
+        for (let c = 0; c < numCtrl; c++) {
+          const u = c / (numCtrl - 1);
+          nodes.push({
+            u,
+            v,
+            baseX: u * width,
+            baseY,
+            x: u * width,
+            y: baseY,
+            vy: 0,
+            vx: 0
+          });
+        }
+        ribbons.push({
+          index: r,
+          v,
+          phase: r * 0.42,
+          amp: 6 + (r % 3) * 2.5,
+          nodes
+        });
+      }
+
+      // 2. Peripheral Spatial Gravity Hubs (Left & Right Wings — Zero Center Crossing / No "X")
+      const hubCoords = isMobile
+        ? [
+            // Left wing
+            { ux: 0.08, uy: 0.22, size: 2.4 },
+            { ux: 0.16, uy: 0.44, size: 3.0 },
+            { ux: 0.10, uy: 0.68, size: 2.2 },
+            // Right wing
+            { ux: 0.91, uy: 0.24, size: 2.5 },
+            { ux: 0.84, uy: 0.46, size: 3.0 },
+            { ux: 0.90, uy: 0.70, size: 2.2 }
+          ]
+        : [
+            // Left Spatial Cluster (e.g., Lancashire / Midlands corridor)
+            { ux: 0.06, uy: 0.20, size: 2.2, primary: false },
+            { ux: 0.15, uy: 0.15, size: 2.8, primary: true },
+            { ux: 0.12, uy: 0.36, size: 3.2, primary: true },
+            { ux: 0.23, uy: 0.28, size: 2.4, primary: false },
+            { ux: 0.21, uy: 0.50, size: 2.9, primary: true },
+            { ux: 0.09, uy: 0.58, size: 2.3, primary: false },
+            { ux: 0.18, uy: 0.72, size: 2.5, primary: false },
+            // Right Spatial Cluster (e.g., London / Thames & Bristol corridor)
+            { ux: 0.93, uy: 0.19, size: 2.2, primary: false },
+            { ux: 0.84, uy: 0.16, size: 2.8, primary: true },
+            { ux: 0.88, uy: 0.37, size: 3.2, primary: true },
+            { ux: 0.77, uy: 0.29, size: 2.4, primary: false },
+            { ux: 0.79, uy: 0.51, size: 2.9, primary: true },
+            { ux: 0.91, uy: 0.59, size: 2.3, primary: false },
+            { ux: 0.82, uy: 0.73, size: 2.5, primary: false }
+          ];
+
+      hubs = hubCoords.map((h, i) => ({
+        id: i,
+        ux: h.ux,
+        uy: h.uy,
+        baseX: h.ux * width,
+        baseY: h.uy * height,
+        x: h.ux * width,
+        y: h.uy * height,
+        vx: 0,
+        vy: 0,
+        size: h.size,
+        primary: !!h.primary,
+        energy: 0
+      }));
+
+      // Connect nearby hubs within each wing via smoothly curved geodesic arcs
+      const edgePairs = isMobile
+        ? [[0, 1], [1, 2], [0, 2], [3, 4], [4, 5], [3, 5]]
+        : [
+            // Left cluster geodesic mesh
+            [0, 1], [0, 2], [1, 2], [1, 3], [2, 3], [2, 4], [3, 4], [2, 5], [4, 5], [4, 6], [5, 6],
+            // Right cluster geodesic mesh
+            [7, 8], [7, 9], [8, 9], [8, 10], [9, 10], [9, 11], [10, 11], [9, 12], [11, 12], [11, 13], [12, 13]
+          ];
+
+      arcs = edgePairs.map((pair, idx) => ({
+        a: pair[0],
+        b: pair[1],
+        bend: (idx % 2 === 0 ? 1 : -1) * (12 + (idx % 3) * 6),
+        speed: 0.16 + (idx % 4) * 0.045,
+        phase: (idx * 0.23) % 1,
+        hasPulse: idx % 2 === 0
+      }));
+    }
+
+    function onMove(e) {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      const nx = clientX - rect.left;
+      const ny = clientY - rect.top;
+      pointer.vx = nx - pointer.x;
+      pointer.vy = ny - pointer.y;
+      pointer.x = nx;
+      pointer.y = ny;
+      pointer.active = true;
+    }
+
+    function onLeave() {
+      pointer.active = false;
+    }
+
+    function onClick(e) {
+      const rect = canvas.getBoundingClientRect();
+      shockwaves.push({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+        radius: 8,
+        maxRadius: Math.max(width, height) * 0.65,
+        strength: 22,
+        alpha: 0.45
+      });
+    }
+
+    buildScene();
+    window.addEventListener('resize', buildScene);
+    hero.addEventListener('mousemove', onMove, { passive: true });
+    hero.addEventListener('mouseleave', onLeave, { passive: true });
+    hero.addEventListener('touchmove', onMove, { passive: true });
+    hero.addEventListener('touchend', onLeave, { passive: true });
+    canvas.addEventListener('click', onClick);
+
+    function quadPoint(x0, y0, cx, cy, x1, y1, s) {
+      const inv = 1 - s;
+      return {
+        x: inv * inv * x0 + 2 * inv * s * cx + s * s * x1,
+        y: inv * inv * y0 + 2 * inv * s * cy + s * s * y1
+      };
+    }
+
+    function step() {
+      t += 0.014;
+      ctx.clearRect(0, 0, width, height);
+
+      const styles = getComputedStyle(document.documentElement);
+      const lineColor = styles.getPropertyValue('--mesh-line').trim() || 'rgba(0, 82, 204, 0.095)';
+      const corridorColor = styles.getPropertyValue('--mesh-corridor').trim() || 'rgba(0, 82, 204, 0.22)';
+      const nodeColor = styles.getPropertyValue('--mesh-node').trim() || 'rgba(180, 120, 20, 0.44)';
+
+      // Advance shockwaves
+      for (let s = shockwaves.length - 1; s >= 0; s--) {
+        const sw = shockwaves[s];
+        sw.radius += 5.5;
+        sw.strength *= 0.965;
+        sw.alpha *= 0.96;
+        if (sw.radius > sw.maxRadius || sw.strength < 0.35) {
+          shockwaves.splice(s, 1);
+        }
+      }
+
+      // 1. Update & Draw Smooth Topographic Equipotential Ribbons
+      ctx.lineWidth = 1;
+      ribbons.forEach(rib => {
+        const nodes = rib.nodes;
+        for (let i = 0; i < nodes.length; i++) {
+          const n = nodes[i];
+          // Smooth harmonic spatial potential wave
+          const waveY =
+            Math.sin(n.u * Math.PI * 2.5 + t * 0.95 + rib.phase) * rib.amp +
+            Math.cos(n.u * Math.PI * 4.0 - t * 0.65 + rib.v * 3.0) * (rib.amp * 0.45);
+
+          let dyImpulse = 0;
+          let dxImpulse = 0;
+
+          if (pointer.active) {
+            const dx = n.baseX - pointer.x;
+            const dy = n.baseY - pointer.y;
+            const dist2 = dx * dx + dy * dy;
+            const rad2 = 140 * 140;
+            if (dist2 < rad2) {
+              const w = 1 - dist2 / rad2;
+              const smoothW = w * w * (3 - 2 * w);
+              dyImpulse += (dy > 0 ? 1 : -1) * smoothW * 14 + Math.sin(dist2 * 0.001 - t * 3) * smoothW * 5;
+              dxImpulse += (dx / 140) * smoothW * 6;
+            }
+          }
+
+          for (let s = 0; s < shockwaves.length; s++) {
+            const sw = shockwaves[s];
+            const dx = n.baseX - sw.x;
+            const dy = n.baseY - sw.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const band = Math.abs(dist - sw.radius);
+            if (band < 48) {
+              dyImpulse += Math.cos((band / 48) * (Math.PI / 2)) * sw.strength * (dy >= 0 ? 0.7 : -0.7);
+            }
+          }
+
+          const targetY = n.baseY + waveY + dyImpulse;
+          const targetX = n.baseX + dxImpulse;
+          n.vy = (n.vy + (targetY - n.y) * 0.08) * 0.86;
+          n.vx = (n.vx + (targetX - n.x) * 0.08) * 0.86;
+          n.y += n.vy;
+          n.x += n.vx;
+        }
+
+        // Render smooth quadratic spline ribbon
+        ctx.strokeStyle = lineColor;
+        ctx.beginPath();
+        ctx.moveTo(nodes[0].x, nodes[0].y);
+        for (let i = 1; i < nodes.length - 1; i++) {
+          const xc = (nodes[i].x + nodes[i + 1].x) * 0.5;
+          const yc = (nodes[i].y + nodes[i + 1].y) * 0.5;
+          ctx.quadraticCurveTo(nodes[i].x, nodes[i].y, xc, yc);
+        }
+        const last = nodes[nodes.length - 1];
+        ctx.lineTo(last.x, last.y);
+        ctx.stroke();
+      });
+
+      // 2. Update Spatial Gravity Hubs (Spring-Damper Physics)
+      hubs.forEach(h => {
+        const floatX = Math.sin(t * 0.8 + h.id * 1.3) * 3.5;
+        const floatY = Math.cos(t * 0.7 + h.id * 1.7) * 3.5;
+        let gx = 0, gy = 0;
+        h.energy *= 0.93;
+
+        if (pointer.active) {
+          const dx = pointer.x - h.baseX;
+          const dy = pointer.y - h.baseY;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 170 && dist > 1) {
+            const pull = (1 - dist / 170);
+            gx += (dx / dist) * pull * 9;
+            gy += (dy / dist) * pull * 9;
+            h.energy = Math.max(h.energy, pull * 0.85);
+          }
+        }
+
+        for (let s = 0; s < shockwaves.length; s++) {
+          const sw = shockwaves[s];
+          const dx = h.baseX - sw.x;
+          const dy = h.baseY - sw.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (Math.abs(dist - sw.radius) < 36) {
+            h.energy = 1.0;
+          }
+        }
+
+        h.vx = (h.vx + (h.baseX + floatX + gx - h.x) * 0.07) * 0.86;
+        h.vy = (h.vy + (h.baseY + floatY + gy - h.y) * 0.07) * 0.86;
+        h.x += h.vx;
+        h.y += h.vy;
+      });
+
+      // 3. Draw Curved Geodesic Transport Arcs & Equilibrium Pulses
+      arcs.forEach(arc => {
+        const h1 = hubs[arc.a];
+        const h2 = hubs[arc.b];
+        if (!h1 || !h2) return;
+
+        const mx = (h1.x + h2.x) * 0.5;
+        const my = (h1.y + h2.y) * 0.5;
+        const dx = h2.x - h1.x;
+        const dy = h2.y - h1.y;
+        const len = Math.sqrt(dx * dx + dy * dy) || 1;
+        const nx = -dy / len;
+        const ny = dx / len;
+        const cx = mx + nx * arc.bend;
+        const cy = my + ny * arc.bend;
+
+        ctx.strokeStyle = corridorColor;
+        ctx.lineWidth = (h1.energy + h2.energy > 0.4) ? 1.35 : 0.95;
+        ctx.beginPath();
+        ctx.moveTo(h1.x, h1.y);
+        ctx.quadraticCurveTo(cx, cy, h2.x, h2.y);
+        ctx.stroke();
+
+        if (arc.hasPulse) {
+          const s = (t * arc.speed + arc.phase) % 1;
+          const pt = quadPoint(h1.x, h1.y, cx, cy, h2.x, h2.y, s);
+          ctx.fillStyle = nodeColor;
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, 2.0, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      });
+
+      // 4. Draw Spatial Hub Nodes & Subtle Optical Rings
+      hubs.forEach(h => {
+        if (h.primary || h.energy > 0.15) {
+          ctx.strokeStyle = corridorColor;
+          ctx.lineWidth = 0.9;
+          ctx.beginPath();
+          ctx.arc(h.x, h.y, h.size + 3.2 + h.energy * 3, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        ctx.fillStyle = h.primary ? nodeColor : corridorColor;
+        ctx.beginPath();
+        ctx.arc(h.x, h.y, h.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // 5. Draw Expanding Click Shockwave Rings
+      shockwaves.forEach(sw => {
+        ctx.strokeStyle = corridorColor;
+        ctx.lineWidth = 1.1;
+        ctx.beginPath();
+        ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
+        ctx.stroke();
+      });
+
+      rafId = requestAnimationFrame(step);
+    }
+
+    rafId = requestAnimationFrame(step);
+
+    heroWaveCleanup = () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      window.removeEventListener('resize', buildScene);
+      hero.removeEventListener('mousemove', onMove);
+      hero.removeEventListener('mouseleave', onLeave);
+      hero.removeEventListener('touchmove', onMove);
+      hero.removeEventListener('touchend', onLeave);
+      canvas.removeEventListener('click', onClick);
+    };
+  }
+
+  // ─── 3D Portrait Glare + Paper Row Ambient Spotlight & Offprint Tilt ───────
+  function init3DTiltAndRowGlow() {
+    const wrap = document.getElementById('portrait-wrap');
+    const card = document.getElementById('portrait-card');
+    const glare = document.getElementById('portrait-glare');
+    if (wrap && card) {
+      let rx = 0, ry = 0, trx = 0, try_ = 0, raf = null;
+      function animatePortrait() {
+        rx += (trx - rx) * 0.14;
+        ry += (try_ - ry) * 0.14;
+        card.style.transform = `rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
+        if (Math.abs(trx - rx) > 0.04 || Math.abs(try_ - ry) > 0.04) {
+          raf = requestAnimationFrame(animatePortrait);
+        } else {
+          raf = null;
+        }
+      }
+      wrap.addEventListener('mousemove', e => {
+        const rect = wrap.getBoundingClientRect();
+        const px = (e.clientX - rect.left) / rect.width;
+        const py = (e.clientY - rect.top) / rect.height;
+        trx = -(py - 0.5) * 8;
+        try_ = (px - 0.5) * 8;
+        if (glare) {
+          glare.style.setProperty('--glare-x', (px * 100).toFixed(1) + '%');
+          glare.style.setProperty('--glare-y', (py * 100).toFixed(1) + '%');
+          glare.style.setProperty('--glare-opacity', '1');
+        }
+        if (!raf) raf = requestAnimationFrame(animatePortrait);
+      });
+      wrap.addEventListener('mouseleave', () => {
+        trx = 0;
+        try_ = 0;
+        if (glare) glare.style.setProperty('--glare-opacity', '0');
+        if (!raf) raf = requestAnimationFrame(animatePortrait);
+      });
+    }
+
+    document.querySelectorAll('.paper').forEach(paperRow => {
+      const thumb = paperRow.querySelector('.thumb-manuscript');
+      paperRow.addEventListener('mousemove', e => {
+        const rect = paperRow.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+        paperRow.style.setProperty('--mouse-x', mx + 'px');
+        paperRow.style.setProperty('--mouse-y', my + 'px');
+        if (thumb) {
+          const nx = mx / rect.width - 0.5;
+          const ny = my / rect.height - 0.5;
+          thumb.style.transform = `rotateX(${(-ny * 10).toFixed(1)}deg) rotateY(${(nx * 12).toFixed(1)}deg) translateY(-2px)`;
+        }
+      });
+      paperRow.addEventListener('mouseleave', () => {
+        if (thumb) thumb.style.transform = '';
+      });
+    });
+  }
+
+  function initScrollAnimations() {
+    if (!('IntersectionObserver' in window)) return;
+    const viewH = window.innerHeight;
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.06, rootMargin: '0px 0px -24px 0px' });
+
+    let idx = 0;
+    document.querySelectorAll('.paper, h2.section, .teaching-item, .fav-category, .honour-item').forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top > viewH * 0.88) {
+        el.classList.add('fade-in-up');
+        el.style.transitionDelay = (idx % 4) * 50 + 'ms';
+        obs.observe(el);
+        idx++;
+      }
+    });
+  }
+
+  let cachedData = null;
+
+  function renderCurrentPage(data) {
+    const yearEl = document.getElementById('year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+    if (document.getElementById('hero-name')) renderResearchView(data);
+    if (document.getElementById('data-list')) renderDataView(data);
+  }
+
+  function initSpaNav() {
+    document.addEventListener('click', e => {
+      const link = e.target.closest('nav a');
+      if (!link) return;
+      const href = link.getAttribute('href');
+      if (!href || href.startsWith('http') || href.startsWith('#') || href.startsWith('mailto:') || href.endsWith('.pdf')) return;
+      if (href.includes('#')) return;
+
+      e.preventDefault();
+      fetch(href)
+        .then(r => r.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          const containerEl = document.querySelector('.container');
+          if (containerEl) {
+            containerEl.style.opacity = '0';
+          }
+          setTimeout(() => {
+            document.title = doc.title;
+            const currentNav = document.querySelector('nav');
+            const newNav = doc.querySelector('nav');
+            if (currentNav && newNav) {
+              currentNav.innerHTML = newNav.innerHTML;
+              initThemeToggle();
+            }
+            const newContainer = doc.querySelector('.container');
+            if (containerEl && newContainer) {
+              containerEl.innerHTML = newContainer.innerHTML;
+              containerEl.style.opacity = '1';
+            }
+            window.history.pushState({}, '', href);
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            if (cachedData) renderCurrentPage(cachedData);
+          }, 120);
+        })
+        .catch(() => {
+          window.location.href = href;
+        });
+    });
+
+    window.addEventListener('popstate', () => {
+      window.location.reload();
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initThemeToggle();
+    initProgressBar();
+    initSpaNav();
+
+    fetch('content.json')
+      .then(r => r.json())
+      .then(data => {
+        cachedData = data;
+        renderCurrentPage(data);
+      })
+      .catch(err => console.error('Error loading content.json:', err));
+  });
+})();

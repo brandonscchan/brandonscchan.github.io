@@ -1,33 +1,97 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Brandon Chan</title>
-  <link rel="icon" type="image/png" href="images/favicon.png" />
-  <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
-  <!-- Fonts: Fjalla One (headings) + Libre Franklin (body) — christiankwolf.com -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Libre+Franklin:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&display=swap" />
-  <link rel="stylesheet" href="css/style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brandon S.C. Chan</title>
+  <meta name="description" content="Brandon S.C. Chan — Pre-Doctoral Fellow in Economics at Yale University.">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <div class="progress-bar" id="progress-bar"></div>
 
-  <nav class="topnav" id="topnav"></nav>
+  <nav class="topnav" id="topnav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand" aria-label="Brandon S.C. Chan Home">
+        <span class="nav-brand-dot"></span>
+        <span>Brandon S.C. Chan</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Research</a></li>
+        <li><a href="files/cv.pdf" target="_blank" rel="noopener">CV</a></li>
+        <li><a href="data.html">Data</a></li>
+      </ul>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle color theme" title="Toggle Dark / Light Mode">
+        <span class="theme-icon"></span>
+      </button>
+    </div>
+  </nav>
 
   <div class="container">
-    <header class="hero" id="hero"></header>
+    <header class="hero" id="hero-stage">
+      <canvas id="hero-canvas" aria-hidden="true"></canvas>
 
-    <section id="about"></section>
-    <section id="working-papers"></section>
-    <section id="published-papers"></section>
-    <section id="work-in-progress"></section>
+      <div class="hero-photo-wrap" id="portrait-wrap">
+        <div class="portrait-card-3d" id="portrait-card">
+          <img id="hero-photo" class="portrait" src="images/portrait.jpg" alt="Brandon S.C. Chan">
+          <div class="portrait-glare" id="portrait-glare"></div>
+        </div>
+      </div>
 
-    <footer id="footer"></footer>
+      <h1 id="hero-name">Brandon S.C. Chan</h1>
+      <div class="title" id="hero-subtitle">Pre-Doctoral Fellow</div>
+      <div class="affiliation" id="hero-affiliation">Department of Economics, Yale University</div>
+      <div class="contact" id="contact">
+        <a href="mailto:brandon.chan@yale.edu" class="contact-email">brandon.chan [at] yale.edu</a>
+        <span>&middot;</span>
+        <span id="hero-location">New Haven, CT</span>
+      </div>
+      <div id="hero-links" class="socials"></div>
+    </header>
+
+    <main>
+      <section id="about-section">
+        <h2 class="section"><span>About</span><span class="section-index">01</span></h2>
+        <div id="hero-bio" class="about-body"></div>
+        <div id="interest-pills" class="interest-pills"></div>
+      </section>
+
+      <section id="working-papers-section" style="display: none;">
+        <h2 class="section"><span>Working Papers</span><span class="section-index" id="wp-count">02</span></h2>
+        <div id="working-papers-list" class="paper-list"></div>
+      </section>
+
+      <section id="publications-section" style="display: none;">
+        <h2 class="section"><span>Published Papers</span><span class="section-index" id="pub-count"></span></h2>
+        <div id="publications-list" class="paper-list"></div>
+      </section>
+
+      <section id="wip-section" style="display: none;">
+        <h2 class="section"><span>Work in Progress</span><span class="section-index" id="wip-count"></span></h2>
+        <div id="wip-list" class="paper-list"></div>
+      </section>
+
+      <section id="resting-papers-section" style="display: none;">
+        <h2 class="section"><span>Resting Papers &amp; Work in Progress</span><span class="section-index" id="rp-count">03</span></h2>
+        <div id="resting-papers-list" class="paper-list"></div>
+      </section>
+
+      <section id="honours-section" style="display: none;">
+        <h2 class="section"><span>Selected Honours &amp; Fellowships</span><span class="section-index" id="hon-count">03</span></h2>
+        <ul id="honours-list" class="honours-list"></ul>
+      </section>
+    </main>
+
+    <footer>
+      &copy; <span id="year"></span> Brandon S.C. Chan &middot; Department of Economics, Yale University
+    </footer>
   </div>
 
   <script src="js/site.js"></script>
-  <script>renderPage('research');</script>
 </body>
 </html>
