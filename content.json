@@ -67,8 +67,8 @@
       "bibtex": "@unpublished{chan2026corrective,\n  title  = {Corrective Overoptimism},\n  author = {Chan, Brandon S.C.},\n  year   = {2026},\n  note   = {Working Paper, Yale University}\n}",
       "links": [
         { "label": "PDF", "url": "https://drive.google.com/file/d/1WN9ZlMECQUX0bFbhMdSP_QgzlSCmf_OA/view?usp=share_link" },
-        { "label": "Online Appendix", "url": "https://drive.google.com/file/d/1WN9ZlMECQUX0bFbhMdSP_QgzlSCmf_OA/view?usp=share_link" },
-        { "label": "Replication Appendix", "url": "https://drive.google.com/file/d/1WN9ZlMECQUX0bFbhMdSP_QgzlSCmf_OA/view?usp=share_link" },
+        { "label": "Online Appendix", "url": "https://drive.google.com/file/d/1sOKAvCWIiyBgEPi3wacChbZcZfkFfrZJ/view?usp=share_link" },
+        { "label": "Replication Appendix", "url": "https://drive.google.com/file/d/1r189GLm-23XSiLA1OhoeAWZnmkjv_OFr/view?usp=share_link" },
         { "label": "Code & Data", "url": "https://github.com/brandonscchan/corrective-overoptimism" }
       ]
     }
