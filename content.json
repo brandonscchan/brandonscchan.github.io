@@ -27,7 +27,7 @@
   "working_papers": [
     {
       "title": "Corrective Overoptimism",
-      "url": "https://drive.google.com/file/d/1WN9ZlMECQUX0bFbhMdSP_QgzlSCmf_OA/view?usp=share_link",
+      "url": "papers/corrective-overoptimism/",
       "thumb": "",
       "authors": "Brandon S.C. Chan",
       "venue": "Working Paper, 2026",
@@ -65,10 +65,24 @@
       "presentations": "Georgetown University Carroll Round (2026), Federal Reserve Bank of Cleveland (2026), Yale Senior Essay Conference (2026)",
       "abstract": "Booms in infrastructure investment — railways in the 1840s, electricity in the 1920s, fibre in the 1990s — often coincide with investor exuberance and losses. But the infrastructure remains long after these episodes. I show that investor overoptimism can serve as a second-best corrective force against chronic underinvestment: when private promoters cannot appropriate the network, knowledge, and allocative spillovers of connective infrastructure, diagnostic expectations over-extrapolate good news and induce irreversible investments, pushing capital accumulation toward the socially efficient benchmark. This mechanism — <i>corrective overoptimism</i> — is embedded in a model of spatial development with endogenous infrastructure and estimated on data from England and Wales, 1700–1881, spanning the canal and railway booms. Corrective overoptimism can be a potent channel of growth.",
       "bibtex": "@unpublished{chan2026corrective,\n  title  = {Corrective Overoptimism},\n  author = {Chan, Brandon S.C.},\n  year   = {2026},\n  note   = {Working Paper, Yale University}\n}",
+      "document_targets": {
+        "pdf": {
+          "papermark_url": "",
+          "drive_url": "https://drive.google.com/file/d/1WN9ZlMECQUX0bFbhMdSP_QgzlSCmf_OA/view?usp=share_link"
+        },
+        "online_appendix": {
+          "papermark_url": "",
+          "drive_url": "https://drive.google.com/file/d/1sOKAvCWIiyBgEPi3wacChbZcZfkFfrZJ/view?usp=share_link"
+        },
+        "replication_appendix": {
+          "papermark_url": "",
+          "drive_url": "https://drive.google.com/file/d/1r189GLm-23XSiLA1OhoeAWZnmkjv_OFr/view?usp=share_link"
+        }
+      },
       "links": [
-        { "label": "PDF", "url": "https://drive.google.com/file/d/1WN9ZlMECQUX0bFbhMdSP_QgzlSCmf_OA/view?usp=share_link" },
-        { "label": "Online Appendix", "url": "https://drive.google.com/file/d/1sOKAvCWIiyBgEPi3wacChbZcZfkFfrZJ/view?usp=share_link" },
-        { "label": "Replication Appendix", "url": "https://drive.google.com/file/d/1r189GLm-23XSiLA1OhoeAWZnmkjv_OFr/view?usp=share_link" },
+        { "label": "PDF", "url": "papers/corrective-overoptimism/" },
+        { "label": "Online Appendix", "url": "papers/corrective-overoptimism-online-appendix/" },
+        { "label": "Replication Appendix", "url": "papers/corrective-overoptimism-replication-appendix/" },
         { "label": "Code & Data", "url": "https://github.com/brandonscchan/corrective-overoptimism" }
       ]
     }

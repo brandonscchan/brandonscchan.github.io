@@ -2,12 +2,51 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Corrective Overoptimism (Replication Appendix) — Brandon S.C. Chan</title>
-  <meta http-equiv="refresh" content="0; url=https://drive.google.com/file/d/1r189GLm-23XSiLA1OhoeAWZnmkjv_OFr/view?usp=share_link">
-  <link rel="canonical" href="https://drive.google.com/file/d/1r189GLm-23XSiLA1OhoeAWZnmkjv_OFr/view?usp=share_link">
-  <script>window.location.replace("https://drive.google.com/file/d/1r189GLm-23XSiLA1OhoeAWZnmkjv_OFr/view?usp=share_link");</script>
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://brandonscchan.github.io/papers/corrective-overoptimism-replication-appendix/">
+  <script>
+    (function () {
+      var FALLBACK_DRIVE = "https://drive.google.com/file/d/1r189GLm-23XSiLA1OhoeAWZnmkjv_OFr/view?usp=share_link";
+      var params = new URLSearchParams(window.location.search);
+      var ref = params.get("ref") || document.referrer || "direct";
+
+      function go(targetUrl) {
+        try {
+          if (targetUrl.indexOf("papermark") !== -1) {
+            var u = new URL(targetUrl);
+            if (ref && !u.searchParams.has("utm_source")) {
+              u.searchParams.set("utm_source", ref);
+            }
+            targetUrl = u.toString();
+          }
+        } catch (_) {}
+        window.location.replace(targetUrl);
+      }
+
+      if (params.get("mode") === "drive") {
+        go(FALLBACK_DRIVE);
+        return;
+      }
+
+      fetch("../../content.json", { cache: "no-store" })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          var wp = (data.working_papers && data.working_papers[0]) || {};
+          var t = (wp.document_targets && wp.document_targets.replication_appendix) || {};
+          go(t.papermark_url || t.drive_url || FALLBACK_DRIVE);
+        })
+        .catch(function () {
+          go(FALLBACK_DRIVE);
+        });
+    })();
+  </script>
+  <noscript>
+    <meta http-equiv="refresh" content="0; url=https://drive.google.com/file/d/1r189GLm-23XSiLA1OhoeAWZnmkjv_OFr/view?usp=share_link">
+  </noscript>
 </head>
-<body>
-  <p>Redirecting to <a href="https://drive.google.com/file/d/1r189GLm-23XSiLA1OhoeAWZnmkjv_OFr/view?usp=share_link">Corrective Overoptimism — Replication Appendix (PDF)</a>…</p>
+<body style="font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 2rem; color: #333;">
+  <p>Opening <strong>Corrective Overoptimism — Replication Appendix (PDF)</strong>… <a href="https://drive.google.com/file/d/1r189GLm-23XSiLA1OhoeAWZnmkjv_OFr/view?usp=share_link">Click here if not redirected automatically.</a></p>
 </body>
 </html>
