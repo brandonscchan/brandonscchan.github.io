@@ -370,24 +370,6 @@
     initScrollAnimations();
   }
 
-  function renderDataView(data) {
-    const list = document.getElementById('data-list');
-    if (!list || !data.data) return;
-    list.innerHTML = data.data.map(d => {
-      const links = (d.links && d.links.length)
-        ? `<div class="paper-actions">${d.links.map(l => `<a class="action-chip" href="${l.url}" target="_blank" rel="noopener">${l.label} &#8599;</a>`).join('')}</div>`
-        : '';
-      return `
-        <div class="teaching-item">
-          <div class="course-title">${d.title}</div>
-          ${d.meta ? `<div class="course-meta">${d.meta}</div>` : ''}
-          ${d.description ? `<div class="course-desc">${d.description}</div>` : ''}
-          ${links}
-        </div>`;
-    }).join('');
-    initScrollAnimations();
-  }
-
   // ─── Apple & DeepMind Topographic Iso-Contours + Curved Geodesic Network ──
   let heroWaveCleanup = null;
   function initHeroWaveCanvas() {
@@ -838,7 +820,6 @@
     if (yearEl) yearEl.textContent = new Date().getFullYear();
 
     if (document.getElementById('hero-name')) renderResearchView(data);
-    if (document.getElementById('data-list')) renderDataView(data);
   }
 
   function initSpaNav() {
