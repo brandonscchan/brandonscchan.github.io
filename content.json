@@ -1,41 +1,23 @@
 {
   "name": "Brandon S.C. Chan",
-  "title": "Pre-Doctoral Fellow in Economics",
-  "affiliation": "Department of Economics, Yale University",
-  "location": "New Haven, CT",
   "email": "brandon.chan@yale.edu",
   "photo": "images/portrait.jpg",
-  "cv": "files/cv.pdf",
-  "research_interests": [
-    "Spatial Economics",
-    "Macroeconomics",
-    "Economic History",
-    "Computational Methods"
-  ],
   "bio": [
     "I am a Pre-Doctoral Fellow in Economics at <a href=\"https://www.yale.edu\" target=\"_blank\" rel=\"noopener\">Yale University</a>, working with Professor <a href=\"https://www.costasarkolakis.com/\" target=\"_blank\" rel=\"noopener\">Costas Arkolakis</a>. I graduated from Yale in May 2026 with a B.A. in Economics and Mathematics. My research focuses on spatial economics and macroeconomics, combining economic theory, computation, and history to study technological revolutions and long-run growth."
   ],
   "links": [
-    { "label": "CV", "type": "cv", "url": "files/cv.pdf" },
-    { "label": "Email", "type": "email", "url": "mailto:brandon.chan@yale.edu" },
-    { "label": "Google Scholar", "type": "scholar", "url": "https://scholar.google.com/" },
-    { "label": "LinkedIn", "type": "linkedin", "url": "https://www.linkedin.com/in/brandon-sc-chan" },
-    { "label": "GitHub", "type": "github", "url": "https://github.com/brandonscchan" }
+    { "label": "CV", "url": "files/cv.pdf" },
+    { "label": "Google Scholar", "url": "https://scholar.google.com/" },
+    { "label": "LinkedIn", "url": "https://www.linkedin.com/in/brandon-sc-chan" },
+    { "label": "GitHub", "url": "https://github.com/brandonscchan" }
   ],
-  "publications": [],
   "working_papers": [
     {
       "title": "Corrective Overoptimism",
       "url": "papers/corrective-overoptimism.pdf",
-      "thumb": "",
-      "authors": "Brandon S.C. Chan",
-      "venue": "Working Paper, 2026",
-      "tag": "Working Paper",
-      "year": "2026",
       "pages": "42 pp.",
-      "jel": "D84, E22, E32, N73, O18, O33, R12, R42",
-      "fields": ["Spatial Economics", "Behavioral Macroeconomics", "Economic History"],
-      "awards_list": [
+      "status": "Working Paper, 2026",
+      "awards": [
         {
           "title": "Wrexham / Heinz Prize",
           "desc": "Best Thesis Across the Social Sciences, Yale University, 2026"
@@ -51,6 +33,16 @@
           "url": "https://economics.yale.edu/news/260520/brandon-chan-26-awarded-best-paper-prize-georgetowns-25th-carroll-round"
         }
       ],
+      "links": [
+        {
+          "label": "Online Appendix",
+          "meta": "25 pp.",
+          "url": "papers/corrective-overoptimism-online-appendix.pdf"
+        }
+      ],
+      "abstract": "Booms in infrastructure investment often coincide with investor exuberance and disappointment, yet the resulting networks endure. I show that investor overoptimism can correct a fundamental market failure: agents with diagnostic expectations over-extrapolate good news and sink irreversible capital, pushing underinvestment toward the efficient level. I embed this mechanism—<i>corrective overoptimism</i>—in a dynamic spatial model with endogenous infrastructure and estimate it for England and Wales from 1710 to 1881, spanning the turnpike, canal, and railway booms. The estimated degree of overreaction (<i>θ</i> = 1.06) aligns with evidence from modern settings and explains railway investors’ traffic forecasts at opening. Without diagnostic expectations, the 1881 transport network would be fifteen percent smaller, eliminating eleven percent of railway-era gains in real output per capita and eight percent of real-wage gains. Corrective overoptimism can be a potent channel for growth.",
+      "jel": "D84, E22, E32, N73, O18, O33, R12, R42",
+      "presentations": "Georgetown University Carroll Round (2026), Federal Reserve Bank of Cleveland (2026), Yale Senior Essay Conference (2026)",
       "media": [
         {
           "outlet": "Yale Economics",
@@ -63,15 +55,8 @@
           "url": "https://economics.yale.edu/news/260521/yale-economics-honors-2026-undergraduate-prize-winners"
         }
       ],
-      "presentations": "Georgetown University Carroll Round (2026), Federal Reserve Bank of Cleveland (2026), Yale Senior Essay Conference (2026)",
-      "abstract": "Booms in infrastructure investment often coincide with investor exuberance and disappointment, yet the resulting networks endure. I show that investor overoptimism can correct a fundamental market failure: agents with diagnostic expectations over-extrapolate good news and sink irreversible capital, pushing underinvestment toward the efficient level. I embed this mechanism—<i>corrective overoptimism</i>—in a dynamic spatial model with endogenous infrastructure and estimate it for England and Wales from 1710 to 1881, spanning the turnpike, canal, and railway booms. The estimated degree of overreaction (<i>θ</i> = 1.06) aligns with evidence from modern settings and explains railway investors’ traffic forecasts at opening. Without diagnostic expectations, the 1881 transport network would be fifteen percent smaller, eliminating eleven percent of railway-era gains in real output per capita and eight percent of real-wage gains. Corrective overoptimism can be a potent channel for growth.",
-      "bibtex": "@unpublished{chan2026corrective,\n  title  = {Corrective Overoptimism},\n  author = {Chan, Brandon S.C.},\n  year   = {2026},\n  note   = {Working Paper, Department of Economics, Yale University},\n  url    = {https://brandonscchan.github.io/papers/corrective-overoptimism/}\n}",
-      "links": [
-        { "label": "Paper PDF", "meta": "42 pp.", "primary": true, "url": "papers/corrective-overoptimism.pdf" },
-        { "label": "Online Appendix", "meta": "25 pp.", "url": "papers/corrective-overoptimism-online-appendix.pdf" }
-      ]
+      "bibtex": "@unpublished{chan2026corrective,\n  title  = {Corrective Overoptimism},\n  author = {Chan, Brandon S.C.},\n  year   = {2026},\n  note   = {Working Paper, Department of Economics, Yale University},\n  url    = {https://brandonscchan.github.io/papers/corrective-overoptimism/}\n}"
     }
   ],
-  "work_in_progress": [],
-  "resting_papers": []
+  "publications": []
 }

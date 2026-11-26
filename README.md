@@ -1,44 +1,27 @@
-# Brandon S.C. Chan — Academic Website
+# Brandon S.C. Chan — Personal Website
 
-Personal academic website for **Brandon S.C. Chan** (Pre-Doctoral Fellow in Economics, Yale University). All content lives in [`content.json`](content.json).
+Static academic homepage for **Brandon S.C. Chan** (Department of Economics, Yale University). All displayed content is driven by [`content.json`](content.json).
 
-### Architecture & Design System
+## Usage
 
-| Layer | Specification |
-| ----- | ------------- |
-| **Typography** | **Inter** (`cv02`, `cv03`, `cv04`, `cv11`) + **Newsreader** optical serif + **JetBrains Mono** tabular numerals |
-| **Color Palette** | Apple P3 Warm Daylight (`#FCFCFA` / `#0052CC` Yale Cobalt) & OLED Midnight (`#070A12` / `#60A5FA` Sapphire) |
-| **Hero Canvas** | 60fps coupled harmonic wave PDE rendered via smooth quadratic-spline topographic equipotential contours and curved geodesic transport arcs |
-| **Editorial Layout** | Open 880px academic column with 3D-tilting miniature manuscript offprints, spring-animated Abstract/BibTeX drawers, and interactive field filtering |
+- **Edit content:** update [`content.json`](content.json).
+- **Preview locally:** `python3 -m http.server 8000` and open <http://localhost:8000>.
+- **Publish:** `git add -A && git commit -m "Update site" && git push`
 
----
+## Structure
 
-## Quick Usage
-
-1. **Edit content** → open [`content.json`](content.json), update text, and save.
-2. **Preview locally** → double-click **`preview.command`** or run `python3 -m http.server 8000` and open <http://localhost:8000>.
-3. **Publish** →
-   ```bash
-   git add -A && git commit -m "Update site" && git push
-   ```
-
-## File Structure
-
+```text
+.
+├── content.json       Site copy, links, and paper metadata
+├── index.html         Main page markup and citation/JSON-LD metadata
+├── css/style.css      Editorial layout and typography styles
+├── js/site.js         Client-side renderer for content.json
+├── images/            Portrait (portrait.jpg) and BC favicons
+├── files/cv.pdf       Curriculum Vitae
+├── papers/            Paper PDFs and canonical metadata landing pages
+├── llms.txt           Concise LLM summary index
+├── llms-full.txt      Technical summary for AI assistants
+├── robots.txt         Crawler directives
+├── sitemap.xml        XML sitemap
+└── .nojekyll          GitHub Pages static-site marker
 ```
-website/
-├── content.json       ← Site data (bio, working papers)
-├── index.html         Research & home page
-├── css/style.css      Styling & Apple/Google theme tokens
-├── js/site.js         Content renderer, 3D offprints & topographic wave canvas
-├── images/            Portrait & favicons
-├── files/             CV (`cv.pdf`)
-├── papers/            Working paper PDFs (`corrective-overoptimism.pdf`,
-│                      `corrective-overoptimism-online-appendix.pdf`) & canonical metadata pages
-├── llms.txt           Concise LLM & AI citation index
-├── llms-full.txt      Full technical & quantitative digest for AI assistants
-├── robots.txt         Crawler & sitemap configuration
-├── sitemap.xml        Search engine sitemap
-├── preview.command    Local macOS preview launcher
-└── .nojekyll          GitHub Pages static indicator
-```
-

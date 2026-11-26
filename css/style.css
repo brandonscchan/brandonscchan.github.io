@@ -1,7 +1,4 @@
-/* ------------------------------------------------------------------
-   Brandon S.C. Chan — Personal Academic Homepage
-   Warm Alabaster, Charcoal Ink & Yale Oxford Blue
-   ------------------------------------------------------------------ */
+/* Brandon S.C. Chan — Personal Website */
 
 :root {
   --font-serif: "Newsreader", Georgia, "Times New Roman", serif;
@@ -165,7 +162,7 @@ button:focus-visible {
   letter-spacing: -0.01em;
 }
 
-.paper-coauthors {
+.paper-pages {
   color: var(--ink-muted);
   font-size: 0.94rem;
   font-variant-numeric: tabular-nums;
@@ -178,7 +175,7 @@ button:focus-visible {
   font-size: 0.96rem;
 }
 
-/* Pellegrino-style typographic award citations */
+/* Award citations */
 .paper-awards {
   list-style: none;
   margin: 0.48rem 0 0;

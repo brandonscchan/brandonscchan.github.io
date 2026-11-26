@@ -1,6 +1,6 @@
 # Brandon S.C. Chan — Academic Research & Working Papers
 
-> Brandon S.C. Chan is a Pre-Doctoral Fellow in Economics at Yale University working with Professor Costas Arkolakis. He graduated from Yale University in May 2026 with a B.A. in Economics and Mathematics (with Distinction), receiving the Wrexham/Heinz Prize (Best Thesis Across the Social Sciences), the Dickerman Memorial Prize (Best Thesis in Economics), and the Best Paper Award at Georgetown University's 25th Carroll Round. His research spans spatial economics, macroeconomics, economic history, and computational methods.
+> Brandon S.C. Chan is a Pre-Doctoral Fellow in Economics at Yale University working with Professor Costas Arkolakis. He graduated from Yale University in May 2026 with a B.A. in Economics and Mathematics, receiving the Wrexham/Heinz Prize (Best Thesis Across the Social Sciences), the Dickerman Memorial Prize (Best Thesis in Economics), and the Best Paper Award at Georgetown University's 25th Carroll Round. His research spans spatial economics, macroeconomics, economic history, and computational methods.
 
 - Homepage: https://brandonscchan.github.io/
 - Full LLM Technical Digest: https://brandonscchan.github.io/llms-full.txt
