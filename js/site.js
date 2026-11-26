@@ -112,16 +112,8 @@
         </div>
       `;
 
-      const upstreamRef = (document.referrer && !document.referrer.includes(window.location.hostname))
-        ? encodeURIComponent(document.referrer)
-        : '';
-      const withRef = (rawUrl) => {
-        if (!rawUrl || !upstreamRef || !rawUrl.startsWith('papers/')) return rawUrl;
-        return rawUrl + (rawUrl.includes('?') ? '&' : '?') + 'ref=' + upstreamRef;
-      };
-
       const titleInner = hasUrl
-        ? `<a href="${withRef(p.url)}" target="_blank" rel="noopener">${p.title}</a>`
+        ? `<a href="${p.url}" target="_blank" rel="noopener">${p.title}</a>`
         : p.title;
       const titleHtml = `<div class="title">${titleInner}</div>`;
 
@@ -182,7 +174,7 @@
       if (p.links && p.links.length > 0) {
         actionsItems += p.links
           .filter(l => l.url && l.url !== '#')
-          .map(l => `<a class="action-chip" href="${withRef(l.url)}" target="_blank" rel="noopener">${l.label} &#8599;</a>`)
+          .map(l => `<a class="action-chip" href="${l.url}" target="_blank" rel="noopener">${l.label} &#8599;</a>`)
           .join('');
       }
       if (p.bibtex) {

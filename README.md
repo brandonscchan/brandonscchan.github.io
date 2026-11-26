@@ -31,7 +31,13 @@ website/
 ├── css/style.css      Styling & Apple/Google theme tokens
 ├── js/site.js         Content renderer, 3D offprints & topographic wave canvas
 ├── images/            Portrait & favicons
-├── files/             CV & documents
+├── files/             CV (`cv.pdf`)
+├── papers/            Working paper PDFs (`corrective-overoptimism.pdf`,
+│                      `corrective-overoptimism-online-appendix.pdf`) & canonical metadata pages
+├── llms.txt           Concise LLM & AI citation index
+├── llms-full.txt      Full technical & quantitative digest for AI assistants
+├── robots.txt         Crawler & sitemap configuration
+├── sitemap.xml        Search engine sitemap
 ├── preview.command    Local macOS preview launcher
 └── .nojekyll          GitHub Pages static indicator
 ```
