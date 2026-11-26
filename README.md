@@ -26,7 +26,7 @@ Personal academic website for **Brandon S.C. Chan** (Pre-Doctoral Fellow in Econ
 
 ```
 website/
-├── content.json       ← Site data (bio, working papers, honours)
+├── content.json       ← Site data (bio, working papers)
 ├── index.html         Research & home page
 ├── css/style.css      Styling & Apple/Google theme tokens
 ├── js/site.js         Content renderer, 3D offprints & topographic wave canvas

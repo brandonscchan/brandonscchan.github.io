@@ -31,8 +31,10 @@
       "thumb": "",
       "authors": "Brandon S.C. Chan",
       "venue": "Working Paper, 2026",
-      "tag": "Working Paper · 2026",
-      "equation": "E^θ[π(k)] > π*(k) ⇒ k^θ → k^FB",
+      "tag": "Working Paper",
+      "year": "2026",
+      "pages": "42 pp.",
+      "jel": "D84, E22, E32, N73, O18, O33, R12, R42",
       "fields": ["Spatial Economics", "Behavioral Macroeconomics", "Economic History"],
       "awards_list": [
         {
@@ -66,58 +68,11 @@
       "abstract": "Booms in infrastructure investment often coincide with investor exuberance and disappointment, yet the resulting networks endure. I show that investor overoptimism can correct a fundamental market failure: agents with diagnostic expectations over-extrapolate good news and sink irreversible capital, pushing underinvestment toward the efficient level. I embed this mechanism—<i>corrective overoptimism</i>—in a dynamic spatial model with endogenous infrastructure and estimate it for England and Wales from 1710 to 1881, spanning the turnpike, canal, and railway booms. The estimated degree of overreaction (<i>θ</i> = 1.06) aligns with evidence from modern settings and explains railway investors’ traffic forecasts at opening. Without diagnostic expectations, the 1881 transport network would be fifteen percent smaller, eliminating eleven percent of railway-era gains in real output per capita and eight percent of real-wage gains. Corrective overoptimism can be a potent channel for growth.",
       "bibtex": "@unpublished{chan2026corrective,\n  title  = {Corrective Overoptimism},\n  author = {Chan, Brandon S.C.},\n  year   = {2026},\n  note   = {Working Paper, Department of Economics, Yale University},\n  url    = {https://brandonscchan.github.io/papers/corrective-overoptimism/}\n}",
       "links": [
-        { "label": "PDF", "url": "papers/corrective-overoptimism.pdf" },
-        { "label": "Online Appendix", "url": "papers/corrective-overoptimism-online-appendix.pdf" }
+        { "label": "Paper PDF", "meta": "42 pp.", "primary": true, "url": "papers/corrective-overoptimism.pdf" },
+        { "label": "Online Appendix", "meta": "25 pp.", "url": "papers/corrective-overoptimism-online-appendix.pdf" }
       ]
     }
   ],
   "work_in_progress": [],
-  "resting_papers": [],
-  "honours": [
-    {
-      "title": "Wrexham / Heinz Prize",
-      "detail": "For best thesis across the social sciences, Yale University",
-      "year": "2026"
-    },
-    {
-      "title": "Dickerman Memorial Prize",
-      "detail": "For best thesis in economics, Yale University",
-      "year": "2026"
-    },
-    {
-      "title": "Best Paper Award",
-      "detail": "25th Carroll Round, Georgetown University",
-      "year": "2026"
-    },
-    {
-      "title": "Distinction in Economics & Mathematics",
-      "detail": "Yale University",
-      "year": "2026"
-    },
-    {
-      "title": "Paul Mellon Research Grant",
-      "detail": "Yale University",
-      "year": "2026"
-    },
-    {
-      "title": "Hixon, Friedman Family, Richter & Herb Scarf Research Fellowships",
-      "detail": "Yale University",
-      "year": "2025"
-    },
-    {
-      "title": "Nicholas J. Spykman Fellowship",
-      "detail": "Yale University",
-      "year": "2023–24"
-    },
-    {
-      "title": "Highest Honours & Music Scholar",
-      "detail": "Winchester College",
-      "year": "2022"
-    },
-    {
-      "title": "Fellow of the Royal Society of Arts (FRSA)",
-      "detail": "The Royal Society of Arts",
-      "year": "2021"
-    }
-  ]
+  "resting_papers": []
 }

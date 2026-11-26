@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Brandon S.C. Chan — Economics, Yale University</title>
+  <script>
+    try {
+      if (localStorage.getItem('bc_theme_v5') === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    } catch (_) {}
+  </script>
   <meta name="description" content="Brandon S.C. Chan — Pre-Doctoral Fellow in Economics at Yale University. Author of 'Corrective Overoptimism' (Wrexham/Heinz Prize, Dickerman Memorial Prize, Carroll Round Best Paper Award). Research in spatial economics, behavioral macroeconomics, and economic history.">
   <meta name="keywords" content="Brandon S.C. Chan, Brandon Chan, Yale Economics, Corrective Overoptimism, Diagnostic Expectations, Spatial Economics, Behavioral Macroeconomics, Economic History, Infrastructure Booms, Railway Mania, Canal Mania, Costas Arkolakis">
   <meta name="author" content="Brandon S.C. Chan">
@@ -117,55 +124,72 @@
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <div class="progress-bar" id="progress-bar"></div>
 
-  <nav class="topnav" id="topnav">
-    <div class="nav-inner">
-      <a href="index.html" class="nav-brand" aria-label="Brandon S.C. Chan Home">
-        <span class="nav-brand-dot"></span>
-        <span>Brandon S.C. Chan</span>
-      </a>
-      <ul class="nav-links">
-        <li><a href="index.html" class="active">Research</a></li>
-        <li><a href="files/cv.pdf" target="_blank" rel="noopener">CV</a></li>
-      </ul>
-      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle color theme" title="Toggle Dark / Light Mode">
-        <span class="theme-icon"></span>
-      </button>
-    </div>
-  </nav>
+  <div class="nav-dock-wrap">
+    <nav class="topnav" id="topnav" aria-label="Primary Navigation">
+      <div class="nav-inner">
+        <a href="#top" class="nav-brand" aria-label="Brandon S.C. Chan Home">
+          <span class="nav-monogram" aria-hidden="true">BC</span>
+          <span class="nav-brand-name">Brandon S.C. Chan</span>
+        </a>
+        <div class="nav-right">
+          <ul class="nav-links">
+            <li><a href="#about-section" class="nav-anchor">About</a></li>
+            <li><a href="#working-papers-section" class="nav-anchor active">Research</a></li>
+            <li><a href="files/cv.pdf" target="_blank" rel="noopener">CV<span class="nav-ext" aria-hidden="true">&#8599;</span></a></li>
+          </ul>
+          <button id="theme-toggle" class="theme-toggle" aria-label="Toggle color theme" title="Toggle Dark / Light Mode">
+            <span class="theme-icon"></span>
+          </button>
+        </div>
+      </div>
+    </nav>
+  </div>
 
-  <div class="container">
+  <div class="container" id="top">
     <header class="hero" id="hero-stage">
       <canvas id="hero-canvas" aria-hidden="true"></canvas>
 
-      <div class="hero-photo-wrap" id="portrait-wrap">
-        <div class="portrait-card-3d" id="portrait-card">
-          <img id="hero-photo" class="portrait" src="images/portrait.jpg" alt="Brandon S.C. Chan">
-          <div class="portrait-glare" id="portrait-glare"></div>
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <div class="hero-kicker" id="hero-kicker">Yale Economics &middot; New Haven</div>
+          <h1 id="hero-name">Brandon S.C. Chan</h1>
+          <div class="title" id="hero-subtitle">Pre-Doctoral Fellow in Economics</div>
+          <div class="affiliation" id="hero-affiliation">Department of Economics, Yale University</div>
+          <div class="contact" id="contact">
+            <a href="mailto:brandon.chan@yale.edu" class="contact-email" title="Click to copy email address">brandon.chan [at] yale.edu</a>
+            <span class="contact-dot" aria-hidden="true">&middot;</span>
+            <span id="hero-location">New Haven, CT</span>
+          </div>
+          <div class="hero-actions-row">
+            <div id="hero-links" class="socials"></div>
+            <a class="cv-pill" id="hero-cv-link" href="files/cv.pdf" target="_blank" rel="noopener">Curriculum Vitae<span class="nav-ext" aria-hidden="true">&#8599;</span></a>
+          </div>
+        </div>
+
+        <div class="hero-photo-wrap" id="portrait-wrap">
+          <div class="portrait-ambient" aria-hidden="true"></div>
+          <div class="portrait-card-3d" id="portrait-card">
+            <img id="hero-photo" class="portrait" src="images/portrait.jpg" alt="Brandon S.C. Chan">
+            <div class="portrait-glare" id="portrait-glare"></div>
+          </div>
         </div>
       </div>
-
-      <h1 id="hero-name">Brandon S.C. Chan</h1>
-      <div class="title" id="hero-subtitle">Pre-Doctoral Fellow</div>
-      <div class="affiliation" id="hero-affiliation">Department of Economics, Yale University</div>
-      <div class="contact" id="contact">
-        <a href="mailto:brandon.chan@yale.edu" class="contact-email">brandon.chan [at] yale.edu</a>
-        <span>&middot;</span>
-        <span id="hero-location">New Haven, CT</span>
-      </div>
-      <div id="hero-links" class="socials"></div>
     </header>
 
     <main>
       <section id="about-section">
         <h2 class="section"><span>About</span><span class="section-index">01</span></h2>
         <div id="hero-bio" class="about-body"></div>
-        <div id="interest-pills" class="interest-pills"></div>
+        <div class="interests-row">
+          <span class="interests-label">Fields</span>
+          <div id="interest-pills" class="interest-pills"></div>
+        </div>
       </section>
 
       <section id="working-papers-section" style="display: none;">
@@ -187,15 +211,12 @@
         <h2 class="section"><span>Resting Papers &amp; Work in Progress</span><span class="section-index" id="rp-count">03</span></h2>
         <div id="resting-papers-list" class="paper-list"></div>
       </section>
-
-      <section id="honours-section" style="display: none;">
-        <h2 class="section"><span>Selected Honours &amp; Fellowships</span><span class="section-index" id="hon-count">03</span></h2>
-        <ul id="honours-list" class="honours-list"></ul>
-      </section>
     </main>
 
     <footer>
-      &copy; <span id="year"></span> Brandon S.C. Chan &middot; Department of Economics, Yale University
+      <span>&copy; <span id="year"></span> Brandon S.C. Chan</span>
+      <span class="footer-sep" aria-hidden="true">&middot;</span>
+      <span>Department of Economics, Yale University</span>
     </footer>
   </div>
 
