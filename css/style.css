@@ -1,20 +1,25 @@
 /* ------------------------------------------------------------------
-   Brandon S.C. Chan — Minimalist Academic Homepage
-   Structure after Joel P. Flynn; Paper Award Citations after Bruno Pellegrino
+   Brandon S.C. Chan — Personal Academic Homepage
+   Warm Alabaster, Charcoal Ink & Yale Oxford Blue
    ------------------------------------------------------------------ */
 
 :root {
-  --font-heading: "Work Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-body: "Karla", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-code: ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --bg-header: #ffffff;
-  --bg-page: #eeeeee;
-  --ink: #151575;
-  --ink-hover: #01332e;
-  --ink-muted: #2d2d5e;
-  --rule: #c9c9c9;
-  --drawer-bg: rgba(255, 255, 255, 0.55);
+  --bg-header: #fcfbf9;
+  --bg-page: #f4f1ea;
+  --bg-drawer: #faf8f3;
+
+  --ink: #1c212b;
+  --ink-muted: #585d68;
+  --accent: #153e6f;
+  --accent-hover: #0b2648;
+  --accent-underline: rgba(21, 62, 111, 0.30);
+  --stone-bullet: #8a7352;
+  --rule: #ddd7cc;
+  --header-rule: #e6e1d7;
 
   --max-width: 42rem;
 }
@@ -29,51 +34,58 @@ html, body {
   overflow-x: clip;
   background-color: var(--bg-page);
   color: var(--ink);
-  font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 1.8;
+  font-family: var(--font-sans);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  font-size: 15.8px;
+  line-height: 1.76;
+  letter-spacing: -0.008em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 a {
-  color: var(--ink);
+  color: var(--accent);
   text-decoration: underline;
-  text-underline-offset: 2px;
+  text-decoration-color: var(--accent-underline);
+  text-underline-offset: 3px;
   text-decoration-thickness: 1px;
-  transition: color 0.15s ease;
+  transition: color 0.16s ease, text-decoration-color 0.16s ease;
 }
 
 a:hover {
-  color: var(--ink-hover);
+  color: var(--accent-hover);
+  text-decoration-color: var(--accent-hover);
 }
 
 a:focus-visible,
 button:focus-visible {
-  outline: 2px solid var(--ink);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
+  border-radius: 2px;
 }
 
-/* ---------- Centered White Header ---------- */
+/* ---------- Masthead Header ---------- */
 .site-header {
   background-color: var(--bg-header);
-  padding: 2rem 1.5rem;
+  border-bottom: 1px solid var(--header-rule);
+  padding: 1.75rem 1.5rem;
   text-align: center;
 }
 
 .site-title {
   margin: 0;
-  font-family: var(--font-heading);
-  font-size: 1.32rem;
-  font-weight: 600;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
+  font-family: var(--font-serif);
+  font-size: 1.62rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.018em;
   color: var(--ink);
 }
 
 /* ---------- Main Single-Column Editorial Canvas ---------- */
 .site-main {
-  padding: 3.25rem 1.5rem 5.5rem;
+  padding: 3rem 1.5rem 5.5rem;
 }
 
 .content-column {
@@ -81,57 +93,61 @@ button:focus-visible {
   margin: 0 auto;
 }
 
-/* Centered Portrait above Bio (Joel Flynn proportions) */
+/* Rectangular Landscape Portrait */
 .portrait-wrap {
-  margin: 0 0 2.4rem;
+  margin: 0 0 2.35rem;
   text-align: center;
 }
 
 .portrait {
   display: block;
-  width: min(100%, 340px);
+  width: min(100%, 500px);
   height: auto;
   margin: 0 auto;
+  border: 1px solid rgba(28, 33, 43, 0.08);
+  box-shadow: 0 12px 32px -18px rgba(28, 33, 43, 0.24);
 }
 
 /* ---------- Bio & Contact ---------- */
 .bio-copy p {
-  margin: 0 0 1.4rem;
+  margin: 0 0 1.3rem;
 }
 
 .contact-line {
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.45rem;
+  color: var(--ink-muted);
 }
 
 .links-line {
   margin: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem 0.9rem;
+  gap: 0.25rem 1.1rem;
+  font-weight: 500;
 }
 
 /* ---------- Section Dividers & Headings ---------- */
 .paper-section {
-  margin-top: 3rem;
+  margin-top: 2.9rem;
 }
 
 .section-rule {
   border: none;
   border-top: 1px solid var(--rule);
-  margin: 0 0 2.25rem;
+  margin: 0 0 2.15rem;
 }
 
 .section-heading {
-  margin: 0 0 1.75rem;
-  font-family: var(--font-heading);
-  font-size: 2rem;
-  font-weight: 300;
+  margin: 0 0 1.65rem;
+  font-family: var(--font-serif);
+  font-size: 1.9rem;
+  font-weight: 400;
   line-height: 1.2;
   letter-spacing: -0.015em;
   color: var(--ink);
 }
 
-/* ---------- Paper Entries (Flynn title/status + Pellegrino awards) ---------- */
+/* ---------- Paper Entries ---------- */
 .paper-list {
   display: flex;
   flex-direction: column;
@@ -143,22 +159,29 @@ button:focus-visible {
 }
 
 .paper-title {
-  font-weight: 400;
+  font-family: var(--font-serif);
+  font-size: 1.24rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }
 
 .paper-coauthors {
-  color: var(--ink);
+  color: var(--ink-muted);
+  font-size: 0.94rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .paper-status {
-  margin: 0.15rem 0 0;
+  margin: 0.12rem 0 0;
   font-style: italic;
+  color: var(--ink-muted);
+  font-size: 0.96rem;
 }
 
 /* Pellegrino-style typographic award citations */
 .paper-awards {
   list-style: none;
-  margin: 0.4rem 0 0;
+  margin: 0.48rem 0 0;
   padding: 0;
 }
 
@@ -166,8 +189,8 @@ button:focus-visible {
   position: relative;
   padding-left: 1rem;
   font-style: italic;
-  font-size: 0.95rem;
-  line-height: 1.65;
+  font-size: 0.93rem;
+  line-height: 1.64;
   color: var(--ink);
 }
 
@@ -177,42 +200,47 @@ button:focus-visible {
   left: 0;
   top: 0;
   font-style: normal;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
+  color: var(--stone-bullet);
 }
 
-/* Flynn-style inline bracketed actions: [Paper PDF (42 pp.)] [Online Appendix (25 pp.)] [Abstract] [BibTeX] */
+/* Inline bracketed actions */
 .paper-actions {
-  margin: 0.45rem 0 0;
+  margin: 0.55rem 0 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem 0.75rem;
+  gap: 0.25rem 0.9rem;
+  font-size: 0.95rem;
 }
 
 .inline-btn {
   padding: 0;
   border: none;
   background: transparent;
-  color: var(--ink);
-  font-family: var(--font-body);
-  font-size: 1rem;
-  line-height: 1.8;
+  color: var(--accent);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  line-height: 1.76;
   text-decoration: underline;
-  text-underline-offset: 2px;
+  text-decoration-color: var(--accent-underline);
+  text-underline-offset: 3px;
   text-decoration-thickness: 1px;
   cursor: pointer;
+  transition: color 0.16s ease, text-decoration-color 0.16s ease;
 }
 
 .inline-btn:hover,
 .inline-btn[aria-expanded="true"] {
-  color: var(--ink-hover);
+  color: var(--accent-hover);
+  text-decoration-color: var(--accent-hover);
 }
 
-/* Hidden-by-default Abstract & BibTeX blocks */
+/* Hidden-by-default Abstract & BibTeX drawers */
 .paper-drawer {
-  margin-top: 0.9rem;
-  padding: 0.9rem 1.1rem;
-  border-left: 2px solid var(--rule);
-  background: var(--drawer-bg);
+  margin-top: 0.95rem;
+  padding: 1rem 1.2rem;
+  border-left: 2px solid var(--accent);
+  background: var(--bg-drawer);
 }
 
 .paper-drawer[hidden] {
@@ -221,8 +249,9 @@ button:focus-visible {
 
 .paper-drawer p {
   margin: 0 0 0.75rem;
-  font-size: 0.95rem;
+  font-size: 0.93rem;
   line-height: 1.72;
+  color: var(--ink);
 }
 
 .paper-drawer p:last-child {
@@ -231,10 +260,10 @@ button:focus-visible {
 
 .bibtex-drawer {
   position: relative;
-  margin-top: 0.9rem;
-  padding: 0.85rem 1rem;
-  border-left: 2px solid var(--rule);
-  background: var(--drawer-bg);
+  margin-top: 0.95rem;
+  padding: 0.9rem 1.1rem;
+  border-left: 2px solid var(--accent);
+  background: var(--bg-drawer);
   overflow-x: auto;
 }
 
@@ -261,26 +290,28 @@ button:focus-visible {
   border-radius: 3px;
   background: var(--bg-header);
   color: var(--ink);
-  font-family: var(--font-body);
-  font-size: 0.78rem;
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
   cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
 }
 
 .copy-bibtex-btn:hover {
-  border-color: var(--ink);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 @media (max-width: 600px) {
   .site-header {
-    padding: 1.5rem 1.25rem;
+    padding: 1.45rem 1.25rem;
+  }
+  .site-title {
+    font-size: 1.46rem;
   }
   .site-main {
-    padding: 2.25rem 1.25rem 4rem;
-  }
-  .portrait {
-    width: min(100%, 280px);
+    padding: 2.1rem 1.25rem 4rem;
   }
   .section-heading {
-    font-size: 1.7rem;
+    font-size: 1.65rem;
   }
 }
