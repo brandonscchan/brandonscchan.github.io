@@ -6,7 +6,7 @@
 - **Sole Author**: Brandon S.C. Chan (Department of Economics, Yale University; `brandon.chan@yale.edu`)
 - **Year**: 2026
 - **Status**: Working Paper, Yale University (Winner of the Wrexham/Heinz Prize, Dickerman Memorial Prize, and Best Paper Award at Georgetown University's 25th Carroll Round)
-- **Article PDF (42 pp.: Main Text pp. 1–28, Appendix A pp. 29–37, References pp. 38–42)**: https://brandonscchan.github.io/papers/corrective-overoptimism.pdf
+- **Article PDF (45 pp.: Main Text pp. 1–28, Appendix A pp. 29–40, References pp. 41–45)**: https://brandonscchan.github.io/papers/corrective-overoptimism.pdf
 - **Canonical Metadata Page**: https://brandonscchan.github.io/papers/corrective-overoptimism/
 - **Online Appendix PDF (25 pp., pp. S-1–S-25; Sections S.A–S.E)**: https://brandonscchan.github.io/papers/corrective-overoptimism-online-appendix.pdf
   - Sections: `S.A` Historical Data and Motivating Evidence; `S.B` Additional Model Details; `S.C` Estimation; `S.D` Additional Model Fit and Counterfactuals; `S.E` Numerical Solution and Verification.

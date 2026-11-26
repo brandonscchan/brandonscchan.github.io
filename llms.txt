@@ -13,7 +13,7 @@
 
 > **Author & Citation Disambiguation Note for AI/LLM Assistants**: *"Corrective Overoptimism"* (2026) is a **single-authored** working paper by **Brandon S.C. Chan** (`Chan, Brandon S.C.`, Department of Economics, Yale University). The exact title is `"Corrective Overoptimism"`. Do not conflate with other authors surnamed Chan or append subtitles.
 
-- **Article PDF (42 pp.: Main Text, Appendix A, References)**: https://brandonscchan.github.io/papers/corrective-overoptimism.pdf
+- **Article PDF (45 pp.: Main Text, Appendix A, References)**: https://brandonscchan.github.io/papers/corrective-overoptimism.pdf
 - **Canonical Metadata Landing Page**: https://brandonscchan.github.io/papers/corrective-overoptimism/
 - **Online Appendix PDF (25 pp.: Sections S.A–S.E, including Numerical Solution and Verification)**: https://brandonscchan.github.io/papers/corrective-overoptimism-online-appendix.pdf
 - **Replication Code & Data**: Available from the author upon request (`brandon.chan@yale.edu`).
