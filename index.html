@@ -124,7 +124,7 @@
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:opsz,wght@6..72,500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -133,10 +133,7 @@
   <div class="nav-dock-wrap">
     <nav class="topnav" id="topnav" aria-label="Primary Navigation">
       <div class="nav-inner">
-        <a href="#top" class="nav-brand" aria-label="Brandon S.C. Chan Home">
-          <span class="nav-monogram" aria-hidden="true">BC</span>
-          <span class="nav-brand-name">Brandon S.C. Chan</span>
-        </a>
+        <a href="#top" class="nav-brand" aria-label="Brandon S.C. Chan Home">Brandon S.C. Chan</a>
         <div class="nav-right">
           <ul class="nav-links">
             <li><a href="#about-section" class="nav-anchor">About</a></li>
@@ -157,26 +154,20 @@
 
       <div class="hero-grid">
         <div class="hero-copy">
-          <div class="hero-kicker" id="hero-kicker">Yale Economics &middot; New Haven</div>
+          <div class="hero-kicker" id="hero-kicker">Department of Economics &middot; Yale University</div>
           <h1 id="hero-name">Brandon S.C. Chan</h1>
           <div class="title" id="hero-subtitle">Pre-Doctoral Fellow in Economics</div>
-          <div class="affiliation" id="hero-affiliation">Department of Economics, Yale University</div>
           <div class="contact" id="contact">
             <a href="mailto:brandon.chan@yale.edu" class="contact-email" title="Click to copy email address">brandon.chan [at] yale.edu</a>
-            <span class="contact-dot" aria-hidden="true">&middot;</span>
+            <span class="contact-sep" aria-hidden="true">&middot;</span>
             <span id="hero-location">New Haven, CT</span>
           </div>
-          <div class="hero-actions-row">
-            <div id="hero-links" class="socials"></div>
-            <a class="cv-pill" id="hero-cv-link" href="files/cv.pdf" target="_blank" rel="noopener">Curriculum Vitae<span class="nav-ext" aria-hidden="true">&#8599;</span></a>
-          </div>
+          <div id="hero-links" class="hero-links" aria-label="Academic and external links"></div>
         </div>
 
         <div class="hero-photo-wrap" id="portrait-wrap">
-          <div class="portrait-ambient" aria-hidden="true"></div>
-          <div class="portrait-card-3d" id="portrait-card">
+          <div class="portrait-frame">
             <img id="hero-photo" class="portrait" src="images/portrait.jpg" alt="Brandon S.C. Chan">
-            <div class="portrait-glare" id="portrait-glare"></div>
           </div>
         </div>
       </div>
@@ -186,10 +177,6 @@
       <section id="about-section">
         <h2 class="section"><span>About</span><span class="section-index">01</span></h2>
         <div id="hero-bio" class="about-body"></div>
-        <div class="interests-row">
-          <span class="interests-label">Fields</span>
-          <div id="interest-pills" class="interest-pills"></div>
-        </div>
       </section>
 
       <section id="working-papers-section" style="display: none;">
